@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 09, 2022 at 12:29 PM
+-- Generation Time: Jul 09, 2022 at 01:37 PM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.6
 
@@ -88,6 +88,7 @@ CREATE TABLE `order_details` (
 CREATE TABLE `products` (
   `id` int(10) UNSIGNED NOT NULL,
   `name` varchar(30) NOT NULL,
+  `img` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `desciption` varchar(50) DEFAULT NULL,
   `manufacture_country` varchar(50) DEFAULT NULL,
   `tax` int(11) NOT NULL,
