@@ -1,9 +1,9 @@
-<?php 
+<?php
 
 function redirect($url, $queryStrings = [])
 {
     $queryString = http_build_query($queryStrings);
-    return header("location: ".BASE_PATH.$url."?".$queryString);
+    return header("location: " . BASE_PATH . $url . "?" . $queryString);
 }
 
 /**
@@ -13,7 +13,21 @@ function redirect($url, $queryStrings = [])
  */
 function back()
 {
-    return header("Location:".$_SERVER['HTTP_REFERER']);
+    return header("Location:" . $_SERVER['HTTP_REFERER']);
+}
+
+/**
+ * Dump and die in beautiful format
+ *
+ * @param [type] $array
+ * @return void
+ */
+function dd($array)
+{
+    echo "<pre>";
+    print_r($array);
+    echo "</pre>";
+    die();
 }
 
 /**
@@ -23,10 +37,11 @@ function back()
  * @param [type] $data
  * @return void
  */
-function render($view,$data) {
+function render($view, $data)
+{
     extract($data);
     ob_start();
-    require('views/'.$view);
+    require('views/' . $view);
     $content = ob_get_contents();
     ob_end_clean();
     return $content;

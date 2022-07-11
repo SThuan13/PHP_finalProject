@@ -1,14 +1,12 @@
-<?php 
+<?php
 
 require_once('./core/Database.php');
 
-class Model 
+class Model
 {
     protected $dbConnection;
 
     protected $table;
-
-    protected $data;
 
     //Allow fields in fillable
     protected $fillable = [];
@@ -48,24 +46,23 @@ class Model
         $columns = implode(',', $columns);
         $sql = "SELECT $columns FROM {$this->table}";
         $result = $this->dbConnection->query($sql);
-        $this->data = $result->fetch_all(MYSQLI_ASSOC);
-        return $this->data;
+        $data = $result->fetch_all(MYSQLI_ASSOC);
+        return $data;
     }
-
 
     //========= XỬ LÍ SQL CHO SẴN ============
     public function getFirst($sql)
     {
         $result = $this->dbConnection->query($sql);
-        $this->data = $result->fetch_assoc();
-        return $this->data;
+        $data = $result->fetch_assoc();
+        return $data;
     }
 
     public function getAll($sql)
     {
         $result = $this->dbConnection->query($sql);
-        $this->data = $result->fetch_all(MYSQLI_ASSOC);
-        return $this->data;
+        $data = $result->fetch_all(MYSQLI_ASSOC);
+        return $data;
     }
 
     //============= CRUD ==============
@@ -78,16 +75,17 @@ class Model
             }, ARRAY_FILTER_USE_KEY);
 
             $keys = array_keys($data);
-            $values = array_map(function($item) {
+            $values = array_map(function ($item) {
                 return "'$item'";
             }, array_values($data));
 
-            $fields = implode(',',$keys);
-            $values = implode(',',$values);
+            $fields = implode(',', $keys);
+            $values = implode(',', $values);
             $sql = "INSERT INTO {$this->table}({$fields}) VALUES ($values)";
-            $result = $this->dbConnection->query($sql);
-            if ($result) {
-                return array_merge($data, [$this->primaryKey => $this->dbConnection->insert_id]);
+            $res = $this->dbConnection->query($sql);
+            if ($res) {
+                $pk = $this->primaryKey;
+                return array_merge($data, [$pk => $this->dbConnection->insert_id]);
             }
         }
 
@@ -103,8 +101,8 @@ class Model
     {
         $sql = "SELECT * FROM {$this->table} where {$this->primaryKey} = {$id}";
         $result = $this->dbConnection->query($sql);
-        $this->data = $result->fetch_assoc();
-        return $this->data;
+        $data = $result->fetch_assoc();
+        return $data;
     }
 
     /**
@@ -116,24 +114,25 @@ class Model
      */
     public function update($data, $id)
     {
-        if (count($data) > 0) {
-            $data = array_filter($data, function ($key) {
-                return in_array($key, $this->fillable);
-            }, ARRAY_FILTER_USE_KEY);
+        $sql = "SELECT * FROM {$this->table} WHERE id = $id";
+        $foundRecord = $this->getFirst($sql);
+        if (count($foundRecord) != 0) {
+            if (count($data) > 0) {
+                $data = array_filter($data, function ($key) {
+                    return in_array($key, $this->fillable);
+                }, ARRAY_FILTER_USE_KEY);
 
-            $updateDataString = implode(',', array_map(function ($key, $value) {
-                return "$key = '$value'";
-            }, array_keys($data), array_values($data)));
+                $updateDataString = implode(',', array_map(function ($key, $value) {
+                    return "$key = '$value'";
+                }, array_keys($data), array_values($data)));
 
-            $sql = "UPDATE {$this->table} SET $updateDataString WHERE {$this->primaryKey} = $id";
-            $result = $this->dbConnection->query($sql);
-            if ($result) {
-                $sql = "SELECT * FROM {$this->table} WHERE {$this->primaryKey} = $id";
+                $sql = "UPDATE {$this->table} SET $updateDataString WHERE {$this->primaryKey} = $id";
                 $result = $this->dbConnection->query($sql);
-                return $result->fetch_assoc();
+                if ($result) {
+                    return array_merge($foundRecord, $data);
+                }
             }
         }
-
         return false;
     }
 
@@ -147,6 +146,10 @@ class Model
     {
         $sql = "DELETE FROM {$this->table} WHERE {$this->primaryKey} = $id";
         $result = $this->dbConnection->query($sql);
-        return $result;
+        if ($result) {
+            return true;
+        }
+
+        return false;
     }
 }
