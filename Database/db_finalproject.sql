@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 11, 2022 at 06:26 PM
+-- Generation Time: Jul 12, 2022 at 07:16 PM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.6
 
@@ -42,6 +42,7 @@ CREATE TABLE `orders` (
   `id` int(11) UNSIGNED NOT NULL,
   `description` varchar(50) DEFAULT NULL,
   `user_id` int(11) UNSIGNED NOT NULL,
+  `voucher_id` int(11) UNSIGNED DEFAULT NULL,
   `final_price` int(11) DEFAULT NULL,
   `status` varchar(50) DEFAULT NULL,
   `date_created` timestamp NULL DEFAULT NULL,
@@ -118,6 +119,39 @@ CREATE TABLE `user_details` (
   `address` varchar(60) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `vouchers`
+--
+
+CREATE TABLE `vouchers` (
+  `id` int(11) UNSIGNED NOT NULL,
+  `name` varchar(30) NOT NULL,
+  `description` varchar(50) DEFAULT NULL,
+  `code` varchar(30) NOT NULL,
+  `type_id` int(11) UNSIGNED NOT NULL,
+  `criteria` int(11) NOT NULL,
+  `value` int(11) NOT NULL,
+  `date_created` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `date_modified` timestamp NULL DEFAULT NULL,
+  `date_start` timestamp NULL DEFAULT NULL,
+  `date_end` timestamp NULL DEFAULT NULL,
+  `status` varchar(30) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `voucher_types`
+--
+
+CREATE TABLE `voucher_types` (
+  `id` int(11) UNSIGNED NOT NULL,
+  `name` varchar(30) NOT NULL,
+  `description` varchar(50) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 --
 -- Indexes for dumped tables
 --
@@ -133,7 +167,8 @@ ALTER TABLE `categories`
 --
 ALTER TABLE `orders`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `user_id` (`user_id`);
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `voucher_id` (`voucher_id`);
 
 --
 -- Indexes for table `order_details`
@@ -170,6 +205,20 @@ ALTER TABLE `user_details`
   ADD PRIMARY KEY (`id`),
   ADD KEY `user_id` (`user_id`),
   ADD KEY `phone_number` (`phone_number`,`emaill`);
+
+--
+-- Indexes for table `vouchers`
+--
+ALTER TABLE `vouchers`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `code` (`code`),
+  ADD KEY `type_id` (`type_id`);
+
+--
+-- Indexes for table `voucher_types`
+--
+ALTER TABLE `voucher_types`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -218,6 +267,18 @@ ALTER TABLE `user_details`
   MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `vouchers`
+--
+ALTER TABLE `vouchers`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `voucher_types`
+--
+ALTER TABLE `voucher_types`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
 -- Constraints for dumped tables
 --
 
@@ -225,7 +286,8 @@ ALTER TABLE `user_details`
 -- Constraints for table `orders`
 --
 ALTER TABLE `orders`
-  ADD CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+  ADD CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
+  ADD CONSTRAINT `orders_ibfk_2` FOREIGN KEY (`voucher_id`) REFERENCES `vouchers` (`id`);
 
 --
 -- Constraints for table `order_details`
@@ -251,6 +313,12 @@ ALTER TABLE `users`
 --
 ALTER TABLE `user_details`
   ADD CONSTRAINT `user_details_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+
+--
+-- Constraints for table `vouchers`
+--
+ALTER TABLE `vouchers`
+  ADD CONSTRAINT `vouchers_ibfk_1` FOREIGN KEY (`type_id`) REFERENCES `voucher_types` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
