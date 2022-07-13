@@ -22,18 +22,18 @@
                 <form role="form" method="post" class="text-start">
                   <div class="input-group input-group-outline my-3">
                     <label class="form-label">Tên tài khoản</label>
-                    <input type="text" class="form-control">
+                    <input name="name" type="text" class="form-control">
                   </div>
                   <div class="input-group input-group-outline mb-3">
                     <label class="form-label">Mật khẩu</label>
-                    <input type="password" class="form-control">
+                    <input name="password" type="password" class="form-control">
                   </div>
                   <div class="form-check form-switch d-flex align-items-center mb-3">
-                    <input class="form-check-input" type="checkbox" id="rememberMe" checked>
+                    <input name="checkbox" class="form-check-input" type="checkbox" id="rememberMe" checked>
                     <label class="form-check-label mb-0 ms-3" for="rememberMe">Ghi nhớ tôi</label>
                   </div>
                   <div class="text-center">
-                    <button type="submit" class="btn bg-gradient-primary w-100 my-4 mb-2">Đăng nhập</button>
+                    <button name="submit" type="submit"  class="btn bg-gradient-primary w-100 my-4 mb-2">Đăng nhập</button>
                   </div>
                   <p class="mt-4 text-sm text-center">
                     Chưa có tài khoản?

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 12, 2022 at 07:16 PM
+-- Generation Time: Jul 13, 2022 at 06:38 PM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.6
 
@@ -98,6 +98,7 @@ CREATE TABLE `roles` (
 
 CREATE TABLE `users` (
   `id` int(11) UNSIGNED NOT NULL,
+  `email` varchar(30) NOT NULL,
   `account_name` varchar(30) NOT NULL,
   `password` varchar(30) NOT NULL,
   `role_id` int(11) UNSIGNED NOT NULL
@@ -115,7 +116,6 @@ CREATE TABLE `user_details` (
   `name` varchar(30) DEFAULT NULL,
   `identification_number` varchar(20) DEFAULT NULL,
   `phone_number` varchar(12) DEFAULT NULL,
-  `emaill` varchar(30) DEFAULT NULL,
   `address` varchar(60) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -196,7 +196,8 @@ ALTER TABLE `roles`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `role_id` (`role_id`);
+  ADD KEY `role_id` (`role_id`),
+  ADD KEY `email` (`email`);
 
 --
 -- Indexes for table `user_details`
@@ -204,7 +205,7 @@ ALTER TABLE `users`
 ALTER TABLE `user_details`
   ADD PRIMARY KEY (`id`),
   ADD KEY `user_id` (`user_id`),
-  ADD KEY `phone_number` (`phone_number`,`emaill`);
+  ADD KEY `phone_number` (`phone_number`);
 
 --
 -- Indexes for table `vouchers`
