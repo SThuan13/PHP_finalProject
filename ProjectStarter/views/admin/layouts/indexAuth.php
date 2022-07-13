@@ -22,7 +22,7 @@
   <link id="pagestyle" href="<?php echo asset('assets/admin/assets/css/material-dashboard.css?v=3.0.4')?>" rel="stylesheet" />
 </head>
 
-<body class="g-sidenav-show  bg-gray-200">
+<body class="">
   
       <!-- Bắt đầu content -->
       <?php defineblock('content'); ?>
@@ -35,6 +35,15 @@
   <script src="<?php echo asset('assets/admin/assets/js/core/bootstrap.min.js')?>"></script>
   <script src="<?php echo asset('assets/admin/assets/js/plugins/perfect-scrollbar.min.js')?>"></script>
   <script src="<?php echo asset('assets/admin/assets/js/plugins/smooth-scrollbar.min.js')?>"></script>
+  <script>
+    var win = navigator.platform.indexOf('Win') > -1;
+    if (win && document.querySelector('#sidenav-scrollbar')) {
+      var options = {
+        damping: '0.5'
+      }
+      Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+    }
+  </script>
   <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
   <script src="<?php echo asset('assets/admin/assets/js/material-dashboard.min.js?v=3.0.4')?>"></script>
 </body>
