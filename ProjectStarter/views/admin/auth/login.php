@@ -1,5 +1,6 @@
 
 <?php require_once('views/admin/layouts/indexAuth.php')?>
+<?php require_once('core/Flash.php')?>
 
 <?php startblock('title')?>
   Đăng nhập
@@ -19,14 +20,24 @@
                 </div>
               </div>
               <div class="card-body">
-                <form role="form" method="post" class="text-start">
+                <form role="form" method="POST" action="<?php echo url('admin/auth/handleLogin')?>" class="text-start">
                   <div class="input-group input-group-outline my-3">
                     <label class="form-label">Tên tài khoản</label>
-                    <input name="name" type="text" class="form-control">
+                    <input name="username" type="text" id="validationCustomUsername" class="form-control">
+                    <?php if(isset($errors['username'])) { ?>
+                      <div class="invalid-feedback" style="display: block;">
+                        <?php echo $errors['username']?>
+                      </div>
+                    <?php } ?>
                   </div>
                   <div class="input-group input-group-outline mb-3">
                     <label class="form-label">Mật khẩu</label>
                     <input name="password" type="password" class="form-control">
+                    <?php if(isset($errors['password'])) { ?>
+                      <div class="invalid-feedback" style="display: block;">
+                        <?php echo $errors['password']?>
+                      </div>
+                    <?php } ?>
                   </div>
                   <div class="form-check form-switch d-flex align-items-center mb-3">
                     <input name="checkbox" class="form-check-input" type="checkbox" id="rememberMe" checked>
@@ -35,6 +46,11 @@
                   <div class="text-center">
                     <button name="submit" type="submit"  class="btn bg-gradient-primary w-100 my-4 mb-2">Đăng nhập</button>
                   </div>
+                  <?php if( Flash::has('error') ) {?>
+                    <div class="invalid-feedback" style="display: block;">
+                    <p class="mt-4 text-sm text-center"><?php echo Flash::get('error'); ?></p>
+                    </div>
+                  <?php }?>
                   <p class="mt-4 text-sm text-center">
                     Chưa có tài khoản?
                     <a href="<?php echo url('admin/auth/register')?>" class="text-primary text-gradient font-weight-bold">Đăng ký</a>
