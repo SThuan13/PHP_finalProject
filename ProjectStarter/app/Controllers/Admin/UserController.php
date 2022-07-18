@@ -12,116 +12,139 @@ class UserController extends BackendController
 {
   public function index()
   {
-    $user = new User();
+    $users = new User();
     $sql = "SELECT users.id, account_name, email, roles.name as role_name from users, roles where users.role_id = roles.id";
-    $user =  $user->getAll($sql);
-
-    //print_r($user);
-    // echo $user['id'];
+    $users =  $users->getAll($sql);
     require_once('views/admin/user/list.php') ;
   }
 
   public function detail()
   {
     $id = $_GET['id'];
-    // echo $id;
-    // die();
     $user = new User();
-    //$sql = "SELECT * FROM users";
-    $sql = "SELECT users.id, account_name, password, user_details.name, identification_number, phone_number, user_details.address ,email, role_id, roles.name as role_name from users, roles, user_details where (users.id = $id) AND (users.role_id = roles.id) And ($id = user_details.user_id)";
-    //echo $sql;
+    $sql = "SELECT * from users where (users.id = $id) ";
     $user =  $user->getFirst($sql);
 
+    $userID = $user['id'];
+    $userDetail = new UserDetail();
+    $sql= "SELECT * FROM user_details WHERE user_id = $userID ";
+    $userDetail = $userDetail->getFirst($sql);
     
-    $role = new Role;
+    $roles = new Role();
     $sql = "SELECT * FROM roles";
-    $role = $role->getAll($sql);
-    //print_r($user);
-    //die();
-    require_once('views/admin/user/detail.php') ;
+    $roles = $roles->getAll($sql);
+
+    // print_r($user);
+    // print_r($userDetail);
+    // die();
+    require_once('views/admin/user/form.php') ;
   }
 
   public function create()
   {
-    $role = new Role;
+    $roles = new Role;
     $sql = "SELECT * FROM roles";
-    $role = $role->getAll($sql);
+    $roles = $roles->getAll($sql);
     require_once('views/admin/user/form.php') ;
   }
   
   public function handleCreate()
   {
-    $user = new User();
-    $_POST['password'] = md5($_POST['password']);
-      // if ( $user->create($_POST) )
-      // {
-      //   print_r($_POST);
-      //   $userDetail = new UserDetail() ;
-
-      //   if( $userDetail->create($_POST) )
-      //   { 
-      //     Flash::set('error', 'Tạo tài khoản thành công!');
-      //     return redirect('admin/user/form' );
-      //   }
-      //   else {
-      //     Flash::set('error', 'Tạo tài khoản không thành công!');
-      //   return redirect('admin/user/create' );
-      //   }
-      // }
-      // else {
-      //   Flash::set('error', 'Tạo tài khoản không thành công!');
-      //   return redirect('admin/user/create' );
-      // }
-    try 
+    $cruRequest = new CreateUpdateUserRequest();
+    $errors = $cruRequest->validateCreateUpdate($_POST);
+    if( $errors )
     {
-      if ( $user->create($_POST) )
+      $user = new User();
+      $_POST['password'] = md5($_POST['password']);
+      try 
       {
-        $userDetail = new UserDetail() ;
-        if( $userDetail->create($_POST) )
-        { 
-          Flash::set('error', 'Tạo tài khoản thành công!');
+        if ( $user->create($_POST) )
+        {
+          $user = $user->getId($_POST);
+
+          $userDetail = new UserDetail() ;
+
+          $details['user_id'] = $user['id'];
+          //
+          if($_POST['name'] != '' ){ $details['name'] = $_POST['name']; }
+          if($_POST['identification_number'] != '' ) { $details['identification_number'] = $_POST['identification_number']; }
+          if($_POST['phone_number'] != '' ) { $details['phone_number'] = $_POST['phone_number']; }
+          if($_POST['phone_number'] != '' ) { $details['address'] = $_POST['address']; }
+          // print_r($user['id']);
+          // die();
+          if( $userDetail->create($details) )
+          { 
+            Flash::set('success', 'Tạo tài khoản thành công!');
+          }
+          else {
+            throw new Exception('Tạo thông tin người dùng không thành công!');
+          }
         }
         else {
           throw new Exception('Tạo tài khoản không thành công!');
         }
       }
-      else {
-        throw new Exception('Tạo tài khoản không thành công!');
+      catch (Exception $e)
+      {
+        Flash::set('error', $e->getMessage());
+      }
+      finally
+      {
+        return redirect('admin/user/create' );
       }
     }
-    catch (Exception $e)
+    else 
     {
-      Flash::set('error', 'Tạo tài khoản không thành công!'.$e->getMessage());
-    }
-    finally
-    {
-      return redirect('admin/user/create' );
+      return redirect('admin/user/create', ['errors'=>$errors] );
     }
   }
 
   public function handleUpdate()
   {
-    //echo "Xử lý create update";
-    // $CreateUpdateUserRequest = new CreateUpdateUserRequest();
-    // $errors = $CreateUpdateUserRequest->validateCreateUpdate($_POST);
-    // if( count($errors) == 0 )
-    // {
-    //   $user = new User();
-    //   $user = $user->update($_POST, $id);
-      
-    //   if ( $user )
-    //   {
-    //     Auth::setUser('user', $user);
-    //     return redirect('admin/user/detail');
-    //   }
+    //print_r($_POST);
+    // $_POST['user_id'] = $_POST['id'];
+    // $userDetail = new UserDetail() ;
+    // $user_id = $userDetail->getId($_POST);
+    // print_r($user_id['id']);
+    //die();
+    $user = new User();
+    $_POST['password'] = md5($_POST['password']);
+    try 
+    {
+      if ( $user->update($_POST, $_POST['id']) )
+      {
+        $userDetail = new UserDetail() ;
 
-    //   Flash::set('error', 'Đăng nhập thất bại!');
-    //   return redirect('admin/user/detail' );
-      
-    // }
-    // return redirect('admin/user/detail', ['errors' => $errors] );
-    //return $this->view('user/detail.php', ['errors' => $errors]);
-    //return $this->view('auth/register.php');
+        $_POST['user_id'] = $_POST['id'];
+
+        $user_id = $userDetail->getId($_POST);
+        //
+        $details['user_id'] = $_POST['user_id'];
+        ($_POST['name'] == '' ) ? $details['name']= NULL : $details['name'] = $_POST['name'] ;
+        ($_POST['identification_number'] == '' ) ? $details['identification_number'] = NULL : $details['identification_number'] = $_POST['identification_number']; 
+        ($_POST['phone_number'] == '' ) ? $details['phone_number'] = NULL : $details['phone_number'] = $_POST['phone_number']; 
+        ($_POST['phone_number'] == '' ) ? $details['address'] = NULL : $details['address'] = $_POST['address']; 
+        // 
+        if( $userDetail->update($details, $user_id['id']) )
+        { 
+          Flash::set('success', 'Sửa tài khoản thành công!');
+        }
+        else {
+          throw new Exception('Sửa tài khoản không thành công!');
+        }
+      }
+      else {
+        throw new Exception('Sửa tài khoản không thành công!');
+      }
+    }
+    catch (Exception $e)
+    {
+      Flash::set('error', $e->getMessage());
+    }
+    finally
+    {
+      return redirect('admin/user/detail', ['id'=>$_POST['id']] );
+    }
   }
 
   

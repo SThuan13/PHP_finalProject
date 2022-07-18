@@ -15,10 +15,10 @@
     <div class="container-fluid py-4 position-relative">
       <div class="content h-100">
       <div class="row">
-        <div class="col">
+        <div class="col-6 col-sm-10">
           <span>NGƯỜI DÙNG</span>
         </div>
-        <div class="col-2">
+        <div class="col-6 col-sm-2">
           <a href="<?php echo url('admin/user/create')?>" class="btn bg-gradient-primary ">Tạo tài khoản</a>
         </div>
         
@@ -39,7 +39,7 @@
               </tr>
             </thead>
             <tbody>
-              <?php foreach($user as $user) {?>
+              <?php foreach($users as $user) {?>
               <tr>
                 <td>
                   <div class="d-flex px-2 py-1">

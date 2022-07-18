@@ -36,6 +36,7 @@ class AuthController extends BackendController
     // return $this->view('auth/login.php', ['errors' => $errors]);
   }
 
+
   public function handleLogin()
   {
     $authRequest = new AuthRequest();

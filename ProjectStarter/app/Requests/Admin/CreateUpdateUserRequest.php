@@ -1,6 +1,7 @@
 <?php
 
   require_once('app/Requests/BaseRequest.php');
+  require_once('core/Flash.php');
 
   class CreateUpdateUserRequest extends BaseRequest
   {
@@ -9,20 +10,20 @@
     {
       if ( empty($data['email']) )
       {
-        $this->errors['email'] = 'email không được để trống!';
+        Flash::set('email-error', 'email không được để trống!');
       }
 
       if ( empty($data['account_name']) )
       {
-        $this->errors['account_name'] = 'Tên tài khoản không được để trống!';
+        Flash::set('account_name-error', 'Tên tài khoản không được để trống!');
       }
 
       if ( empty($data['password']) )
       {
-        $this->errors['password'] = 'Password không được để trống!';
+        Flash::set('password-error', 'Password không được để trống!');
       }
 
-      return $this->errors;
+      return false;
     }
   }
 
