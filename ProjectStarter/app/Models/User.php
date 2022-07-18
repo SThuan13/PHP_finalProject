@@ -17,5 +17,7 @@ class User extends Model
     // die();
     return $this->getAll($sql);
   }
+
+  
 }
 ?>

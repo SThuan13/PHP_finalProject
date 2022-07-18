@@ -44,7 +44,7 @@ class AuthController extends BackendController
     {
       $user = new User();
       $user = $user->authenticate($_POST);
-      print_r($user);
+      
       if ( $user )
       {
         Auth::setUser('user', $user);
