@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 13, 2022 at 06:38 PM
+-- Generation Time: Jul 23, 2022 at 10:59 AM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.6
 
@@ -29,8 +29,16 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `categories` (
   `id` int(11) UNSIGNED NOT NULL,
-  `name` varchar(30) DEFAULT NULL
+  `name` varchar(30) NOT NULL,
+  `description` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `categories`
+--
+
+INSERT INTO `categories` (`id`, `name`, `description`) VALUES
+(1, 'Test2', 'test');
 
 -- --------------------------------------------------------
 
@@ -90,6 +98,14 @@ CREATE TABLE `roles` (
   `name` varchar(30) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `roles`
+--
+
+INSERT INTO `roles` (`id`, `name`) VALUES
+(1, 'Admin'),
+(2, 'User');
+
 -- --------------------------------------------------------
 
 --
@@ -100,9 +116,19 @@ CREATE TABLE `users` (
   `id` int(11) UNSIGNED NOT NULL,
   `email` varchar(30) NOT NULL,
   `account_name` varchar(30) NOT NULL,
-  `password` varchar(30) NOT NULL,
-  `role_id` int(11) UNSIGNED NOT NULL
+  `password` varchar(32) NOT NULL,
+  `role_id` int(11) UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`id`, `email`, `account_name`, `password`, `role_id`) VALUES
+(1, 'thuan14869@gmail.com', 'thuan', '827ccb0eea8a706c4c34a16891f84e7b', 1),
+(2, 'Nguyendu@gmail.com', 'Nguyendu', '827ccb0eea8a706c4c34a16891f84e7b', 1),
+(3, 'Nguyendu2k1@gmail.com', 'nguyendu2k1', '827ccb0eea8a706c4c34a16891f84e7b', 1),
+(5, 'thuan111@gmail.com', 'thuan11', '827ccb0eea8a706c4c34a16891f84e7b', 1);
 
 -- --------------------------------------------------------
 
@@ -118,6 +144,16 @@ CREATE TABLE `user_details` (
   `phone_number` varchar(12) DEFAULT NULL,
   `address` varchar(60) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `user_details`
+--
+
+INSERT INTO `user_details` (`id`, `user_id`, `name`, `identification_number`, `phone_number`, `address`) VALUES
+(1, 1, 'Vũ Minh Thuấn', '', '0898531409', ''),
+(2, 2, NULL, NULL, NULL, NULL),
+(3, 3, 'Nguyen Dinh Du ', 'test', 'test', ''),
+(4, 5, 'thuan11', '', '1098278881', 'Nam dinh');
 
 -- --------------------------------------------------------
 
@@ -196,8 +232,11 @@ ALTER TABLE `roles`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `email_3` (`email`),
+  ADD UNIQUE KEY `account_name` (`account_name`),
   ADD KEY `role_id` (`role_id`),
-  ADD KEY `email` (`email`);
+  ADD KEY `email` (`email`),
+  ADD KEY `account_name_2` (`account_name`);
 
 --
 -- Indexes for table `user_details`
@@ -229,7 +268,7 @@ ALTER TABLE `voucher_types`
 -- AUTO_INCREMENT for table `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `orders`
@@ -253,19 +292,19 @@ ALTER TABLE `products`
 -- AUTO_INCREMENT for table `roles`
 --
 ALTER TABLE `roles`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `user_details`
 --
 ALTER TABLE `user_details`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `vouchers`

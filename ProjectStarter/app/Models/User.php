@@ -10,10 +10,14 @@ class User extends Model
 
   public function authenticate( $data )
   {
-    $email = $data['email'];
+    //print_r($data) ;
     $username = $data['username'];
-    $password = $data['password'];
-    $sql = "SELECT * FROM users WHERE ( email = ' $email' OR account_name = '$username' ) AND (password = md5($password)) AND (role_id = 1) ";
+    $password = md5($data['password']);
+    $sql = "SELECT * FROM users 
+            WHERE ( (email = '$username')  AND (password = '$password') AND (role_id = 1))
+            OR ( (account_name = '$username' ) AND (password = '$password') AND (role_id = 1)) ";
+    // echo $sql;
+    // die();
     return $this->getAll($sql);
   }
 

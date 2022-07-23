@@ -12,12 +12,10 @@
     
     <?php require_once('views/admin/layouts/includes/navbar.php') ?>
     
-    <div class="container-fluid py-4 position-relative">
+    <div class="container-fluid py-4 position-relative " style="height: 500px;">
 
       <p>Đây là trang Dashboard</p>
-    
-      <?php require_once('views/admin/layouts/includes/footer.php') ?>
-    
+
     </div>
   </main>
   

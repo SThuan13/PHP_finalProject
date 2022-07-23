@@ -95,7 +95,7 @@ class UserController extends BackendController
     }
     else 
     {
-      return redirect('admin/user/create', ['errors'=>$errors] );
+      return redirect('admin/user/create');
     }
   }
 
@@ -125,6 +125,8 @@ class UserController extends BackendController
         ($_POST['phone_number'] == '' ) ? $details['phone_number'] = NULL : $details['phone_number'] = $_POST['phone_number']; 
         ($_POST['phone_number'] == '' ) ? $details['address'] = NULL : $details['address'] = $_POST['address']; 
         // 
+        //print_r($details);
+        //die();
         if( $userDetail->update($details, $user_id['id']) )
         { 
           Flash::set('success', 'Sửa tài khoản thành công!');
