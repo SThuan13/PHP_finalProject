@@ -186,6 +186,7 @@
   <script>
     let template = document.getElementById("productPicker").content;
     const productList = document.getElementById("productList");
+    
 
     function showContent() 
     {
@@ -194,10 +195,13 @@
       productList.appendChild(clon);
 
       //add event bấm delete
-      const deleteBtn = document.getElementsByClassName('btn-delete');
-      deleteBtn[deleteBtn.length - 1].addEventListener( 'click', ()=> {
-        deleteBtn[deleteBtn.length - 1].parentElement.parentElement.remove();
-      } )
+      const deleteBtn = document.querySelectorAll('.btn-delete');
+      for ( let i = 0 ; i < deleteBtn.length ; i ++)
+      {
+        deleteBtn[i].addEventListener('click', ()=> {
+          deleteBtn[i].closest('.row').remove();
+        })
+      }
     }
 
   </script>
