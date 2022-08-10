@@ -29,6 +29,7 @@
         <?php if(isset ($product)) {?>
           <input type="text" name="id" value="<?php echo $product['id'];?> " hidden>
         <?php }?>
+
         <div class="row gx-5">
           <div class="col-md-6">
             <div class="input-group input-group-static my-3">
@@ -58,11 +59,59 @@
 
         <div class="row gx-5">
           <div class="col-md-6">
-
+            <div class="input-group input-group-static my-3">
+              <label class="">Nước sản xuất</label>
+              <input type="text" name="manufaturer_country" class="form-control"  
+              <?php if(isset($product)) {?> 
+                value="<?php if(isset($product['manufaturer_country'])){echo $product['description'];} else {echo '';}?>" 
+              <?php }?>>
+            </div>
           </div>
-          
           <div class="col-md-6">
+            
+          </div>
+        </div>
 
+        <div class="row gx-5">
+          <div class="col-md-6">
+            <div div class="input-group input-group-static my-3">
+              <label class="">tax</label>
+              <input type="number" name="tax" class="form-control"  
+              <?php if(isset($product)) {?> 
+                value="<?php if(isset($product['tax'])){echo $product['tax'];} else {echo '';}?>" 
+              <?php }?>>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div div class="input-group input-group-static my-3">
+              <label class="">Giá gốc</label>
+              <input type="number" name="base_price" class="form-control"  
+              <?php if(isset($product)) {?> 
+                value="<?php if(isset($product['base_price'])){echo $product['base_price'];} else {echo '';}?>" 
+              <?php }?>>
+            </div>
+          </div>
+        </div>
+
+        <div class="row gx-5">
+          <div class="col">
+            <div class="input-group input-group-static  my-3">
+              <label class="=">Danh mục <span style="color: red;">*</span></label>
+              <select class="form-control form-select" name="category_id">
+                <?php
+                  foreach($categories as $category){?>
+                  <option 
+                    value="<?php echo $category['id']?>" 
+                    <?php if(isset($product)) {?>
+                      <?php if($product['category_id'] == $category['id']) {echo 'selected'; } ?>
+                    <?php }?>
+                  >
+                    <?php echo $category['name']?>
+                  </option>
+                <?php }?>
+              </select>
+            </div>
           </div>
         </div>
 
