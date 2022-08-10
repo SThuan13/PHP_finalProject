@@ -54,11 +54,6 @@
           </div>
 
           <div class="row">
-            <label for="floatingInput" class="col-form-label">Image</label>
-            <input type="file" class="form-group btn" id="floatingInput" multiple name="upload[]">
-          </div>
-
-          <div class="row">
             <div class="col-md-6">
               <div class="input-group input-group-static my-3">
                 <label class="" for="final_price">Thành tiền</label>

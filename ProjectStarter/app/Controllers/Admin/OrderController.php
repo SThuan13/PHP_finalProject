@@ -94,7 +94,6 @@ class OrderController extends BackendController
   
   public function handleCreate()
   {
-    // $file = $_FILES['upload'];
     // dd($file);
     // dd($_POST);
     // $cruRequest = new CreateUpdateCategoryRequest();
@@ -104,15 +103,7 @@ class OrderController extends BackendController
       // try 
       // {
         // $order = new Order();
-        // if($_FILES['upload']['error'] > 0 )
-        // {
-        //   $_POST['image'] = '';
-        // }
-        // else 
-        // {
-          $storage = new Storage();
-          $upload = $storage->upload('images', $_FILES);
-          //dd($upload);
+        
         //}
         // if ( $order->create($_POST) )
         // { 

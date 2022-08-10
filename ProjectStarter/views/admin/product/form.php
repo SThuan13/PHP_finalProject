@@ -25,6 +25,7 @@
         <form 
           action="<?php if(isset($product)) {echo url('admin/product/handleupdate');}  else{echo url('admin/product/handlecreate');}  ?>"  
           method="post"
+          enctype="multipart/form-data"
         >
         <?php if(isset ($product)) {?>
           <input type="text" name="id" value="<?php echo $product['id'];?> " hidden>
@@ -95,7 +96,7 @@
         </div>
 
         <div class="row gx-5">
-          <div class="col">
+          <div class="col-6">
             <div class="input-group input-group-static  my-3">
               <label class="=">Danh mục <span style="color: red;">*</span></label>
               <select class="form-control form-select" name="category_id">
@@ -113,7 +114,31 @@
               </select>
             </div>
           </div>
+
         </div>
+
+        <div class="row">
+          <label for="floatingInput" class="col-form-label">Image</label>
+          <input type="file" class="form-group btn" id="floatingInput" multiple name="upload[]">
+        </div>
+
+
+          <!-- <div class="accordion accordion-flush" id="accordionFlushExample">
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="flush-headingOne">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                  Image
+                </button>
+              </h2>
+              <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+                <div class="accordion-body text-dark ">
+                  <div id="images">
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div> -->
 
         <div class="gx-5">
           <button class="btn btn-primary" type="submit">Xác nhận</button>

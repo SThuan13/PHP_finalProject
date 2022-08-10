@@ -4,6 +4,7 @@ require_once('app/Controllers/Admin/BackendController.php');
 require_once('app/Models/Product.php');
 require_once('app/Models/Category.php');
 require_once('core/Flash.php');
+require_once('core/Storage.php');
 require_once('core/Auth.php');
 
 class ProductController extends BackendController
@@ -76,6 +77,8 @@ class ProductController extends BackendController
   
   public function handleCreate()
   {
+    $this->handleUploadImages();
+    dd($_POST);
     // $cruRequest = new CreateUpdateUserRequest();
     // $errors = $cruRequest->validateCreateUpdate($_POST);
     // if( $errors )
@@ -83,6 +86,7 @@ class ProductController extends BackendController
       $product = new Product();
       try 
       {
+        
         if ($_POST['category_id'] == 0 ){ $_POST['category_id'] = null; } 
         if ( $product->create($_POST) )
         { 
@@ -105,6 +109,28 @@ class ProductController extends BackendController
     // {
     //   return redirect('admin/user/create');
     // }
+  }
+
+  public function handleUploadImages()
+  {
+    $storage = new Storage();
+    $storage->upload('images', $_FILES);
+
+    $image = array();
+    $index = 0;
+    //$count = count($_FILES['upload']['name']);
+    foreach( $_FILES['upload']['name'] as $item)
+    {
+      $image += array($index=>"images/$item");
+      $index += 1;
+    }
+
+    $_POST['img'] = json_encode($image);
+
+    // dd(json_decode($_POST['images']));
+    // //$_POST['images'] = 'images/'.$_FILES['upload']['name'];
+    // dd($_POST['images']);
+    // die();
   }
 
   public function handleUpdate()

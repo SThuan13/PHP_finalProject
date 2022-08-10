@@ -100,51 +100,53 @@
           </div>
         </div>
 
-        <div class="card-footer p-1"> 
-          <ul class="offset-sm-9 col-sm-2 pagination pagination-primary mb-1">
-            <li class="page-item">
-              <a class="page-link" href="<?php echo url('admin/order')?>">
-                <i class="fas fa-caret-left"></i>
-              </a>
-            </li>
-            <li class="page-item <?php if( $page == 1 ) { echo "disabled"; } ?>" >
-              <a class="page-link" 
-                onclick="<?php if($page > 1) {$page -= 1;} ?>" 
-                href="<?php 
-                  echo url('admin/order', ['page'=>$page])
-                ?>"
-              >
-                <i class="fas fa-angle-left"></i>
-              </a>
-            </li>
-            <li class="page-item active">
-              <a class="page-link text-white" >
-                <?php echo $_GET['page']?>
-              </a>
-            </li>
-            <li class="page-item <?php if(count($orders) < ($page*$take)){echo "disabled";} ?>">
-              <a class="page-link" 
-                onclick="<?php $page = $_GET['page'] + 1; ?>" 
-                href="<?php 
-                  echo url('admin/order', ['page'=>$page]);
-                ?>"
-              >
-                <i class="fas fa-angle-right"></i>
-              </a>
-            </li>
-            <li class="page-item">
-              <button 
-                class="page-link"
-                onclick=""
-              >
-                <i class="fas fa-caret-right"></i>
-              </button>
-              <!-- <a class="page-link" href="#link">
-                
-              </a> -->
-            </li>
-          </ul>
-        </div>
+        <?php if($orders) {?>
+          <div class="card-footer p-1"> 
+            <ul class="offset-sm-9 col-sm-2 pagination pagination-primary mb-1">
+              <li class="page-item">
+                <a class="page-link" href="<?php echo url('admin/order')?>">
+                  <i class="fas fa-caret-left"></i>
+                </a>
+              </li>
+              <li class="page-item <?php if( $page == 1 ) { echo "disabled"; } ?>" >
+                <a class="page-link" 
+                  onclick="<?php if($page > 1) {$page -= 1;} ?>" 
+                  href="<?php 
+                    echo url('admin/order', ['page'=>$page])
+                  ?>"
+                >
+                  <i class="fas fa-angle-left"></i>
+                </a>
+              </li>
+              <li class="page-item active">
+                <a class="page-link text-white" >
+                  <?php echo $_GET['page']?>
+                </a>
+              </li>
+              <li class="page-item <?php if(count($orders) < ($page*$take)){echo "disabled";} ?>">
+                <a class="page-link" 
+                  onclick="<?php $page = $_GET['page'] + 1; ?>" 
+                  href="<?php 
+                    echo url('admin/order', ['page'=>$page]);
+                  ?>"
+                >
+                  <i class="fas fa-angle-right"></i>
+                </a>
+              </li>
+              <li class="page-item">
+                <button 
+                  class="page-link"
+                  onclick=""
+                >
+                  <i class="fas fa-caret-right"></i>
+                </button>
+                <!-- <a class="page-link" href="#link">
+                  
+                </a> -->
+              </li>
+            </ul>
+          </div>
+        <?php }?>
       </div>
       </div>
     </div>
