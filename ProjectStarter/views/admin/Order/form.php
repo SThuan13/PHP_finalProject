@@ -25,6 +25,7 @@
         <form 
           action="<?php if(isset($order)) {echo url('admin/order/handleupdate');}  else{echo url('admin/order/handlecreate');}  ?>"  
           method="post"
+          enctype="multipart/form-data"
         >
 
           <div class="row gx-5">
@@ -50,6 +51,11 @@
                 <input type="text" id="status" name="status" class="form-control ps-3">
               </div>
             </div>
+          </div>
+
+          <div class="row">
+            <label for="floatingInput" class="col-form-label">Image</label>
+            <input type="file" class="form-group btn" id="floatingInput" multiple name="upload[]">
           </div>
 
           <div class="row">
@@ -186,7 +192,6 @@
   <script>
     let template = document.getElementById("productPicker").content;
     const productList = document.getElementById("productList");
-    
 
     function showContent() 
     {

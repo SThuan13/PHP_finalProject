@@ -7,6 +7,7 @@ require_once('app/Models/OrderDetail.php');
 require_once('app/Models/User.php');
 require_once('app/Models/Product.php');
 require_once('core/Flash.php');
+require_once('core/Storage.php');
 // require_once('core/Auth.php');
 
 class OrderController extends BackendController
@@ -85,27 +86,42 @@ class OrderController extends BackendController
     $products = $products->findAll();
     //dd($products);
     //dd($user);
+
+    //$orderDetail = 
+
     return $this->view('order/form.php', compact('users', 'products')) ;
   }
   
   public function handleCreate()
   {
-    dd($_POST);
+    // $file = $_FILES['upload'];
+    // dd($file);
+    // dd($_POST);
     // $cruRequest = new CreateUpdateCategoryRequest();
     // $errors = $cruRequest->validateCreateUpdate($_POST);
     // if( $errors )
     // {
       // try 
       // {
-      //   $order = new Order();
-      //   if ( $order->create($_POST) )
-      //   { 
-      //       Flash::set('success', 'Tạo đơn hàng thành công!');
-      //   }
-      //   else 
-      //   {
-      //     throw new Exception('Tạo đơn hàng không thành công!');
-      //   }
+        // $order = new Order();
+        // if($_FILES['upload']['error'] > 0 )
+        // {
+        //   $_POST['image'] = '';
+        // }
+        // else 
+        // {
+          $storage = new Storage();
+          $upload = $storage->upload('images', $_FILES);
+          //dd($upload);
+        //}
+        // if ( $order->create($_POST) )
+        // { 
+        //     Flash::set('success', 'Tạo đơn hàng thành công!');
+        // }
+        // else 
+        // {
+        //   throw new Exception('Tạo đơn hàng không thành công!');
+        // }
       // }
       // catch (Exception $e)
       // {
