@@ -77,8 +77,8 @@ class ProductController extends BackendController
   
   public function handleCreate()
   {
-    $this->handleUploadImages();
-    dd($_POST);
+    
+    //dd($_POST);
     // $cruRequest = new CreateUpdateUserRequest();
     // $errors = $cruRequest->validateCreateUpdate($_POST);
     // if( $errors )
@@ -86,7 +86,7 @@ class ProductController extends BackendController
       $product = new Product();
       try 
       {
-        
+        $this->handleUploadImages();
         if ($_POST['category_id'] == 0 ){ $_POST['category_id'] = null; } 
         if ( $product->create($_POST) )
         { 
@@ -126,17 +126,13 @@ class ProductController extends BackendController
     }
 
     $_POST['img'] = json_encode($image);
-
-    // dd(json_decode($_POST['images']));
-    // //$_POST['images'] = 'images/'.$_FILES['upload']['name'];
-    // dd($_POST['images']);
-    // die();
   }
 
   public function handleUpdate()
   {
     try 
     {
+      $this->handleUploadImages();
       $product = new Product();
       if ( $product->update($_POST, $_POST['id']) )
       { 

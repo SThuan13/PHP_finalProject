@@ -62,9 +62,9 @@
           <div class="col-md-6">
             <div class="input-group input-group-static my-3">
               <label class="">Nước sản xuất</label>
-              <input type="text" name="manufaturer_country" class="form-control"  
+              <input type="text" name="manufacturer_country" class="form-control"  
               <?php if(isset($product)) {?> 
-                value="<?php if(isset($product['manufaturer_country'])){echo $product['description'];} else {echo '';}?>" 
+                value="<?php if(isset($product['manufacturer_country'])){echo $product['manufacturer_country'];} else {echo '';}?>" 
               <?php }?>>
             </div>
           </div>
@@ -122,23 +122,76 @@
           <input type="file" class="form-group btn" id="floatingInput" multiple name="upload[]">
         </div>
 
-
-          <!-- <div class="accordion accordion-flush" id="accordionFlushExample">
+        <?php if(isset($product) && isset($product['img'])) {?>
+          <div class="accordion accordion-flush" id="accordionFlushExample">
             <div class="accordion-item">
               <h2 class="accordion-header" id="flush-headingOne">
                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
-                  Image
+                  Image List
                 </button>
               </h2>
               <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
                 <div class="accordion-body text-dark ">
                   <div id="images">
+                    <div class="row">
+                      <?php
+                        $index = 0; 
+                        foreach(json_decode($product['img']) as $img) {?>
+                        <div class="col-xl-3 col-md-6 mb-xl-0 my-4">
+                          <div class="card card-blog card-plain">
+                            <div class="card-header p-0 mt-n4 mx-3">
+                              <button type="button" class=" d-block shadow-xl border-radius-xl img-thumbnail" data-bs-toggle="modal" data-bs-target="#img<?php echo $index; ?>">
+                                <img class="img-fluid  shadow border-radius-xl"
+                                  src="<?php echo asset("storage/{$img}") ?>" 
+                                  alt="<?php echo $img ?>" 
+                                >
+                              </button>
+                            </div>
+                          </div>
+                        </div>
 
+                        <div class="modal fade" id="img<?php echo $index; $index ++;?>" tabindex="" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                          <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                            <div class="modal-content bg-transparent border-0">
+                              <div class="row">
+
+                                <!-- <div class="col-1 p-0 d-flex align-items-center">
+                                  <button 
+                                    type="button" 
+                                    class="btn text-light"
+                                    onclick="changeImg($index - 2)"
+                                  >
+                                    <i class="fas fa-angle-left"></i>
+                                  </button>
+                                </div> -->
+
+                                <div class="col-12">
+                                  <img class="img-fluid" src="<?php echo asset("storage/{$img}") ?>" alt="">
+                                </div>
+                                
+                                <!-- <div class="col-1 p-0 d-flex align-items-center" >
+                                  <button 
+                                    type="button" 
+                                    class="btn text-light"
+                                    onclick="changeImg($index)"
+                                  >
+                                    <i class="fas fa-angle-right"></i>
+                                  </button>
+                                </div> -->
+                                
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                      <?php }?>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div> -->
+          </div>
+        <?php }?>
 
         <div class="gx-5">
           <button class="btn btn-primary" type="submit">Xác nhận</button>
@@ -149,4 +202,8 @@
       </div>
     </div>
   </main>
+
+  <script>
+
+  </script>
 <?php endblock() ?>
