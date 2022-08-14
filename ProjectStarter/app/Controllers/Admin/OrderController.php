@@ -1,5 +1,4 @@
 <?php
-  
 require_once('app/Controllers/Admin/BackendController.php');
 //require_once('app/Requests/Admin/CreateUpdateCategoryRequest.php');
 require_once('app/Models/Order.php');
@@ -51,7 +50,7 @@ class OrderController extends BackendController
 
     $orders = new Order();
 
-    $sql = "SELECT orders.id, description, user_details.name as name, date_created from orders, user_details 
+    $sql = "SELECT orders.id, note, status, user_details.name as name, date_created from orders, user_details 
             where user_details.id = orders.user_id 
             LIMIT $this->take OFFSET $this->offSet";
     $orders =  $orders->getAll($sql);
@@ -65,16 +64,20 @@ class OrderController extends BackendController
     $order = new Order();
     $order =  $order->find($id);
     
-    $orderDetail = new OrderDetail();
+    $orderDetails = new OrderDetail();
     $sql = "SELECT * FROM order_details WHERE order_details.order_id = $id";
-    $orderDetail = $orderDetail->getFirst($sql);
+    $orderDetails = $orderDetails->getAll($sql);
     //$orderDetail = $orderDetail->find($)
 
-    $user = new User();
-    $user_id = $order['user_id'];
-    $sql = "SELECT * FROM users WHERE users.id = $user_id";
+    $products = new Product();
+    $products  = $products->findAll();
 
-    return $this->view('order/form.php', compact('order', 'orderDetail')) ;
+    $users = new User();
+    $users = $users->findAll();
+    // $user_id = $order['user_id'];
+    // $sql = "SELECT * FROM users WHERE users.id = $user_id";
+
+    return $this->view('order/form.php', compact('order', 'orderDetails','users','products')) ;
   }
 
   public function create()
@@ -84,44 +87,54 @@ class OrderController extends BackendController
 
     $products = new Product();
     $products = $products->findAll();
-    //dd($products);
-    //dd($user);
-
-    //$orderDetail = 
 
     return $this->view('order/form.php', compact('users', 'products')) ;
   }
   
   public function handleCreate()
   {
-    // dd($file);
-    // dd($_POST);
     // $cruRequest = new CreateUpdateCategoryRequest();
     // $errors = $cruRequest->validateCreateUpdate($_POST);
     // if( $errors )
     // {
-      // try 
-      // {
-        // $order = new Order();
-        
-        //}
-        // if ( $order->create($_POST) )
-        // { 
-        //     Flash::set('success', 'Tạo đơn hàng thành công!');
-        // }
-        // else 
-        // {
-        //   throw new Exception('Tạo đơn hàng không thành công!');
-        // }
-      // }
-      // catch (Exception $e)
-      // {
-      //   Flash::set('error', $e->getMessage());
-      // }
-      // finally
-      // {
-      //   return redirect('admin/order/create' );
-      // }
+      try 
+      {
+        $order = new Order();
+        $orderDetail = new OrderDetail();
+
+        $date = new DateTime("now", new DateTimeZone('Asia/Ho_Chi_Minh') );
+        $_POST['date_created'] = $date->format('Y-m-d H:i:s');
+        //dd($_POST);
+        if( $order->create($_POST) )
+        { 
+          $id = $order->getId($_POST);
+          $order_id = $id['id'];
+
+          $detail = array();
+          for ( $i = 0 ; $i < count($_POST['oderDetail']['product']['product_id']); $i ++)
+          {
+            $detail[$i] = array('product_id'=>$_POST['oderDetail']['product']['product_id'][$i], 'quantity'=>$_POST['oderDetail']['product']['quantity'][$i], 'order_id'=>$order_id);
+          }
+
+          foreach($detail as $item)
+          {
+            $orderDetail->create($item);
+          }
+          Flash::set('success', 'Tạo đơn hàng thành công!');
+        }
+        else 
+        {
+          throw new Exception('Tạo đơn hàng không thành công!');
+        }
+      }
+      catch (Exception $e)
+      {
+        Flash::set('error', $e->getMessage());
+      }
+      finally
+      {
+        return redirect('admin/order/create' );
+      }
     // }
     // else 
     // {
@@ -131,18 +144,21 @@ class OrderController extends BackendController
 
   public function handleUpdate()
   {
+    $this->handleUpdateProductList();
+    dd($_POST);
     // $cruRequest = new CreateUpdateCategoryRequest();
     // $errors = $cruRequest->validateCreateUpdate($_POST);
     // if( $errors )
     // {
     try 
     {
+      $_POST['date_modified'] = date("Y-m-d h:i:sa");
       $order = new Order();
       if ( $order->update($_POST, $_POST['id']) )
       { 
-          Flash::set('success', 'Chỉnh sửa đơn hàng thành công!');
+        Flash::set('success', 'Chỉnh sửa đơn hàng thành công!');
       }
-      else {
+      else {  
         throw new Exception('Chỉnh sửa đơn hàng không thành công!');
       }
     }
@@ -159,6 +175,73 @@ class OrderController extends BackendController
     // {
     //   return redirect('admin/category/create');
     // }
+  }
+
+  public function handleUpdateProductList()
+  {
+
+    $id = $_POST['id'];
+    $orderDetails = new OrderDetail();
+    $sql = "SELECT * FROM order_details WHERE order_details.order_id = $id";
+    $orderDetails = $orderDetails->getAll($sql);
+
+    //$orderDetail = new OrderDetail();
+    $detail = array();
+    for ( $i = 0 ; $i < count($_POST['oderDetail']['product']['product_id']); $i ++)
+    {
+      $detail[$i] = array('id'=>$_POST['oderDetail']['product']['id'][$i] ,'product_id'=>$_POST['oderDetail']['product']['product_id'][$i], 'quantity'=>$_POST['oderDetail']['product']['quantity'][$i], 'order_id'=>$id);
+    }
+    echo '<pre>';
+    print_r($orderDetails);
+    echo '<br>';
+    print_r($detail);
+    echo '<br>';
+    echo '<br>';
+
+    // foreach( $detail as $item)
+    // {
+    //   if ($item['id'] != 0)
+    //   {
+    //     print_r($item);
+    //     if(array_search($item,$orderDetails))
+    //     {
+    //       echo 'trung';
+    //     }
+    //     else 
+    //     {
+    //       echo "co thay doi";
+    //     }
+    //     echo '<br>';
+    //   }
+    //   else 
+    //   {
+    //     echo 'new';
+    //   }
+    // }
+
+    // for ($i = 0 ; $i < count($detail); $i ++)
+    // {
+    //   $item = $detail[$i]; 
+    //   if ($item['id'] != 0)
+    //   {
+    //     print_r($item);
+    //     if($this->costumSearch($item,$orderDetails))
+    //     {
+    //       echo 'trung';
+    //     }
+    //     else 
+    //     {
+    //       echo "co thay doi";
+    //     }
+    //     echo '<br>';
+    //   }
+    //   else 
+    //   {
+    //     echo 'new';
+    //   }
+    // }
+
+    dd($detail);
   }
 
   

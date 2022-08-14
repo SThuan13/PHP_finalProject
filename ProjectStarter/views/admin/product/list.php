@@ -43,7 +43,7 @@
                   <tr>
                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">ID</th>
                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tên</th>
-                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">mô tả</th>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Hình ảnh</th>
                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"></th>
                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"></th>
                   </tr>
@@ -60,11 +60,16 @@
                         </div>
                       </div>
                     </td>
-                    <td>
+                    <td >
                       <?php echo $product['name'];?>
                     </td>
-                    <td class="text-sm">
-                      <?php echo $product['description'];?>
+                    <td class="">
+                      <?php $img = json_decode($product['img'])?>
+                        <img class="img shadow border-radius-xl" 
+                          style="width:125px ; height:125px; object-fit: contain"
+                          src="<?php echo asset("storage/{$img[0]}") ?>" 
+                          alt=""
+                        >               
                     </td>
                     <td class="align-middle">
                       <a href="<?php echo url('admin/product/detail', ['id'=>$product['id']])?>" class="text-secondary font-weight-normal text-xs" data-toggle="tooltip">

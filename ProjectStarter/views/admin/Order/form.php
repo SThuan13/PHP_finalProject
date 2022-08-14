@@ -27,6 +27,9 @@
           method="post"
           enctype="multipart/form-data"
         >
+          <?php if(isset ($order)) {?>
+            <input type="text" name="id" value="<?php echo $order['id'];?> " hidden>
+          <?php }?>
 
           <div class="row gx-5">
             <div class="col-md-6">
@@ -48,7 +51,9 @@
             <div class="col-md-6">
               <div class="input-group input-group-static my-3">
                 <label class="" for="status">Trạng thái</label>
-                <input type="text" id="status" name="status" class="form-control ps-3">
+                <input type="text" id="status" name="status" class="form-control ps-3" disabled
+                  <?php if(isset($order)) {?>value="<?php if($order['status'] == 1) { echo "Đã thanh toán"; }?>" <?php }?>
+                >
               </div>
             </div>
           </div>
@@ -57,22 +62,25 @@
             <div class="col-md-6">
               <div class="input-group input-group-static my-3">
                 <label class="" for="final_price">Thành tiền</label>
-                <input type="number" id="final_price" name="final_price" class="form-control ps-3" disabled>
+                <input type="number" id="final_price" name="final_price" class="form-control ps-3" disabled
+                  <?php if(isset($order)) {?>value="<?php  echo $order['final_price']; }?>" 
+                >
               </div>
             </div>
             <div class="col-md-6">
               <div class="input-group input-group-static my-3">
                 <label class="" for="date_created">Ngày tạo</label>
-                <input type="date" id="date_created" class="form-control ps-3" disabled
+                <input type="date" id="date_created" name="date_created" class="form-control ps-3" disabled
                   name="date_created"  
                   value="<?php 
                     if(isset($order))
                     {
-                      //echo $oder.['date_created'];
+                      echo date("Y-m-d", strtotime($order['date_created']));
                     }
                     else 
                     {
-                      echo date("Y-m-d");
+                      $date = new DateTime("now", new DateTimeZone('Asia/Ho_Chi_Minh') );
+                      echo $date->format('Y-m-d');
                     }
                   ?>"
                 >
@@ -99,11 +107,11 @@
                 </select>
               </div>
             </div>
-
             <div class="col-md-6">
-              <div class="input-group input-group-static my-3">
-                <label class="" for="description">Mô tả</label>
-                <textarea id="description" name="description" class="form-control" rows="1">
+              <div div class="input-group input-group-static my-3">
+                <label class="col-12" for="note">Ghi chú</label>
+                <textarea id="note" name="note" class="form-control" rows="1">
+                  <?php if(isset($order)) echo $order['note']; ?>
                 </textarea> 
               </div>
             </div>
@@ -119,6 +127,49 @@
               <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
                 <div class="accordion-body text-dark ">
                   <div id="productList">
+                    <?php if($order && $orderDetails )
+                    {
+                      foreach ($orderDetails as $detail)
+                      { ?>
+                        <div class="row">
+                          <div class="col-5 mx-0">
+                            <div class="input-group input-group-static  my-3">
+                              <input type="text" name="oderDetail[product][id][]" value="<?php echo $detail['id'];?> " hidden>
+                              <label class="" for="product">Sản phẩm</label>
+                              <select class="form-control form-select" id="product" name="oderDetail[product][product_id][]">
+                                <?php foreach($products as $product ) {?>
+                                  <option 
+                                    value="<?php echo $product['id']?>" 
+                                    <?php if($detail['product_id'] == $product['id']) {echo "selected";}?>  
+                                  >
+                                    <?php echo $product['name']?>
+                                  </option>
+                                <?php }?>
+                              </select>
+                            </div>
+                          </div>
+
+                          <div class="col-5 mx-0">
+                            <div class="input-group input-group-static  my-3">
+                              <label class="" for="product">Số lượng</label>
+                              <input class="form-control" type="number" min="1" name="oderDetail[product][quantity][]"
+                                value="<?php echo $detail['quantity']?>"
+                              >
+                            </div>
+                          </div>
+
+                          <div class="col-2 mx-0">
+                            <button 
+                              class="btn btn-delete"
+                              type="button"
+                            >
+                              <i class="material-icons text-sm me-2">delete</i>
+                            </button>
+                          </div>
+                        </div>
+                      <?php  }
+                    }
+                    ?>
 
                   </div>
 
@@ -127,6 +178,7 @@
                       <div class="col-5 mx-0">
                         <div class="input-group input-group-static  my-3">
                           <label class="" for="product">Sản phẩm</label>
+                          <input type="text" name="oderDetail[product][id][]" value="0" hidden>
                           <select class="form-control form-select" id="product" name="oderDetail[product][product_id][]">
                             <?php foreach($products as $product ) {?>
                               <option 
@@ -141,7 +193,7 @@
                       <div class="col-5 mx-0">
                         <div class="input-group input-group-static  my-3">
                           <label class="" for="product">Số lượng</label>
-                          <input class="form-control" type="number" name="oderDetail[product][quantity][]"></input>
+                          <input class="form-control" type="number" min="1" name="oderDetail[product][quantity][]"></input>
                         </div>
                       </div>
 

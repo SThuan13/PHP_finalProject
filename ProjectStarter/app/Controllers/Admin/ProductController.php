@@ -128,11 +128,23 @@ class ProductController extends BackendController
     $_POST['img'] = json_encode($image);
   }
 
+  public function handleUpdateImages()
+  {
+    if(empty($_FILES))
+    {
+      unset($_POST['img']);
+    }
+    else
+    {
+      $this->handleUploadImages();
+    }
+  }
+
   public function handleUpdate()
   {
     try 
     {
-      $this->handleUploadImages();
+      $this->handleUpdateImages();
       $product = new Product();
       if ( $product->update($_POST, $_POST['id']) )
       { 
