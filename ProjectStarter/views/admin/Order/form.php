@@ -127,7 +127,7 @@
               <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
                 <div class="accordion-body text-dark ">
                   <div id="productList">
-                    <?php if($order && $orderDetails )
+                    <?php if(isset($order) && $order && $orderDetails )
                     {
                       foreach ($orderDetails as $detail)
                       { ?>

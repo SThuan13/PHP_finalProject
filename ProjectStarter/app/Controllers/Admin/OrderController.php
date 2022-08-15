@@ -104,7 +104,7 @@ class OrderController extends BackendController
 
         $date = new DateTime("now", new DateTimeZone('Asia/Ho_Chi_Minh') );
         $_POST['date_created'] = $date->format('Y-m-d H:i:s');
-        //dd($_POST);
+        
         if( $order->create($_POST) )
         { 
           $id = $order->getId($_POST);
@@ -144,18 +144,20 @@ class OrderController extends BackendController
 
   public function handleUpdate()
   {
-    $this->handleUpdateProductList();
-    dd($_POST);
+    //dd($_POST);
     // $cruRequest = new CreateUpdateCategoryRequest();
     // $errors = $cruRequest->validateCreateUpdate($_POST);
     // if( $errors )
     // {
     try 
     {
-      $_POST['date_modified'] = date("Y-m-d h:i:sa");
+      $date = new DateTime("now", new DateTimeZone('Asia/Ho_Chi_Minh') );
+      $_POST['date_modified'] = $date->format('Y-m-d H:i:s');
+      //dd($_POST);
       $order = new Order();
       if ( $order->update($_POST, $_POST['id']) )
       { 
+        $this->handleUpdateProductList();
         Flash::set('success', 'Chỉnh sửa đơn hàng thành công!');
       }
       else {  
@@ -179,71 +181,48 @@ class OrderController extends BackendController
 
   public function handleUpdateProductList()
   {
-
     $id = $_POST['id'];
     $orderDetails = new OrderDetail();
+    $orderDetail = new OrderDetail();
     $sql = "SELECT * FROM order_details WHERE order_details.order_id = $id";
     $orderDetails = $orderDetails->getAll($sql);
 
-    //$orderDetail = new OrderDetail();
     $detail = array();
     for ( $i = 0 ; $i < count($_POST['oderDetail']['product']['product_id']); $i ++)
     {
       $detail[$i] = array('id'=>$_POST['oderDetail']['product']['id'][$i] ,'product_id'=>$_POST['oderDetail']['product']['product_id'][$i], 'quantity'=>$_POST['oderDetail']['product']['quantity'][$i], 'order_id'=>$id);
     }
-    echo '<pre>';
-    print_r($orderDetails);
-    echo '<br>';
-    print_r($detail);
-    echo '<br>';
-    echo '<br>';
 
-    // foreach( $detail as $item)
-    // {
-    //   if ($item['id'] != 0)
-    //   {
-    //     print_r($item);
-    //     if(array_search($item,$orderDetails))
-    //     {
-    //       echo 'trung';
-    //     }
-    //     else 
-    //     {
-    //       echo "co thay doi";
-    //     }
-    //     echo '<br>';
-    //   }
-    //   else 
-    //   {
-    //     echo 'new';
-    //   }
-    // }
-
-    // for ($i = 0 ; $i < count($detail); $i ++)
-    // {
-    //   $item = $detail[$i]; 
-    //   if ($item['id'] != 0)
-    //   {
-    //     print_r($item);
-    //     if($this->costumSearch($item,$orderDetails))
-    //     {
-    //       echo 'trung';
-    //     }
-    //     else 
-    //     {
-    //       echo "co thay doi";
-    //     }
-    //     echo '<br>';
-    //   }
-    //   else 
-    //   {
-    //     echo 'new';
-    //   }
-    // }
-
-    dd($detail);
+    foreach( $detail as $item)
+    {
+      if ($item['id'] != 0)
+      {
+        if ($this->exactRecord($orderDetails, $item))
+        {
+          $orderDetail->update($item, $item['id']);
+        }
+      }
+      else 
+      {
+        $orderDetail->create($item);
+      }
+    }
   }
 
+  public function exactRecord($orderDetails, $item)
+  {
+    foreach($orderDetails as $baseDetail)
+    {
+      if($baseDetail == $item)
+      {
+        return false;
+      }
+      else 
+      {
+        return true; 
+      }
+    }
+  }
   
 }
 ?>
