@@ -23,6 +23,7 @@ class AuthController extends WebController
         $user = new User();
 
         $user = $user->authenticate($_POST, 2);
+        //dd($user);
         
         if ( $user )
         {
@@ -39,10 +40,9 @@ class AuthController extends WebController
 
     public function handleRegister()
     {
-      //dd($_POST);
+      dd($_POST);
       $authRequest = new AuthRequest();
       $errors = $authRequest->validateRegister($_POST);
-      //echo 'That bai';
       //dd($errors);
       if( count($errors) == 0 )
       {

@@ -29,8 +29,8 @@ class AuthRequest extends BaseRequest
 
     public function validateLogin($data)
     {
-        if (empty($data['email'])) {
-            $this->errors['email'] = 'Địa chỉ email không được để trống!';
+        if (empty($data['username'])) {
+            $this->errors['username'] = 'Địa chỉ email không được để trống!';
         }
 
         if (empty($data['password'])) {

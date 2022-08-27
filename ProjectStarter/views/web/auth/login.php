@@ -9,13 +9,13 @@
         <div class="account_grid">
             <div class="col-md-6 login-right">
 
-                <form action="<?php echo url('auth/handleLogin') ?>">
+                <form method="POST" action="<?php echo url('auth/handleLogin') ?>">
                     <div>
                         <span>Địa chỉ email</span>
-                        <input name="email" type="email" id="validationCustomUsername" class="form-control">
-                        <?php if (isset($errors['email'])) { ?>
-                            <div class="invalid-feedback" style="display: block;">
-                                <?php echo $errors['email'] ?>
+                        <input name="username" type="email" id="validationCustomUsername" class="form-control">
+                        <?php if (isset($errors['username'])) { ?>
+                            <div class="invalid-feedback" style="display: block; color:red">
+                                <?php echo $errors['username'] ?>
                             </div>
                         <?php } ?>
                     </div>
@@ -23,7 +23,7 @@
                         <span>Mật khẩu</span>
                         <input name="password" type="password" class="form-control">
                         <?php if (isset($errors['password'])) { ?>
-                            <div class="invalid-feedback" style="display: block;">
+                            <div class="invalid-feedback" style="display: block; color:red">
                                 <?php echo $errors['password'] ?>
                             </div>
                         <?php } ?>
@@ -35,7 +35,7 @@
                 </form>
             </div>
             <?php if (Flash::has('error')) { ?>
-                <div class="invalid-feedback" style="display: block;">
+                <div class="invalid-feedback" style="display: block; color:red">
                     <p class="mt-4 text-sm text-center"><?php echo Flash::get('error'); ?></p>
                 </div>
             <?php } ?>
