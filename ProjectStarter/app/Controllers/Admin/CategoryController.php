@@ -1,6 +1,6 @@
 <?php
 require_once('app/Controllers/Admin/BackendController.php');
-//require_once('app/Requests/Admin/CreateUpdateCategoryRequest.php');
+require_once('app/Requests/Admin/CategoryRequest.php');
 require_once('app/Models/Category.php');
 require_once('core/Flash.php');
 // require_once('core/Auth.php');
@@ -67,10 +67,10 @@ class CategoryController extends BackendController
   
   public function handleCreate()
   {
-    // $cruRequest = new CreateUpdateCategoryRequest();
-    // $errors = $cruRequest->validateCreateUpdate($_POST);
-    // if( $errors )
-    // {
+    $request = new categoryRequest();
+    $errors = $request->validateCreateUpdate($_POST);
+    if( $errors )
+    {
       try 
       {
         $category = new Category();
@@ -90,43 +90,43 @@ class CategoryController extends BackendController
       {
         return redirect('admin/category/create' );
       }
-    // }
-    // else 
-    // {
-    //   return redirect('admin/category/create');
-    // }
+    }
+    else 
+    {
+      return redirect('admin/category/create');
+    }
   }
 
   public function handleUpdate()
   {
-    // $cruRequest = new CreateUpdateCategoryRequest();
-    // $errors = $cruRequest->validateCreateUpdate($_POST);
-    // if( $errors )
-    // {
-    try 
+    $request = new categoryRequest();
+    $errors = $request->validateCreateUpdate($_POST);
+    if( $errors )
     {
-      $category = new Category();
-      if ( $category->update($_POST, $_POST['id']) )
-      { 
-          Flash::set('success', 'Chỉnh sửa danh mục thành công!');
+      try 
+      {
+        $category = new Category();
+        if ( $category->update($_POST, $_POST['id']) )
+        { 
+            Flash::set('success', 'Chỉnh sửa danh mục thành công!');
+        }
+        else {
+          throw new Exception('Chỉnh sửa danh mục không thành công!');
+        }
       }
-      else {
-        throw new Exception('Chỉnh sửa danh mục không thành công!');
+      catch (Exception $e)
+      {
+        Flash::set('error', $e->getMessage());
+      }
+      finally
+      {
+        return redirect('admin/category/detail', ['id'=>$_POST['id']]);
       }
     }
-    catch (Exception $e)
-    {
-      Flash::set('error', $e->getMessage());
-    }
-    finally
+    else 
     {
       return redirect('admin/category/detail', ['id'=>$_POST['id']]);
     }
-    // }
-    // else 
-    // {
-    //   return redirect('admin/category/create');
-    // }
   }
 
   

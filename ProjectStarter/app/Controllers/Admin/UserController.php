@@ -1,7 +1,7 @@
 <?php
 
 require_once('app/Controllers/Admin/BackendController.php');
-require_once('app/Requests/Admin/CreateUpdateUserRequest.php');
+require_once('app/Requests/Admin/UserRequest.php');
 require_once('app/Models/User.php');
 require_once('app/Models/UserDetail.php');
 require_once('app/Models/role.php');
@@ -95,8 +95,8 @@ class UserController extends BackendController
 
   public function handleCreate()
   {
-    $cruRequest = new CreateUpdateUserRequest();
-    $errors = $cruRequest->validateCreateUpdate($_POST);
+    $request = new CreateUpdateUserRequest();
+    $errors = $request->validateCreate($_POST);
     if ($errors) {
       $user = new User();
       $_POST['password'] = md5($_POST['password']);
@@ -142,12 +142,10 @@ class UserController extends BackendController
 
   public function handleUpdate()
   {
-    //print_r($_POST);
-    // $_POST['user_id'] = $_POST['id'];
-    // $userDetail = new UserDetail() ;
-    // $user_id = $userDetail->getId($_POST);
-    // print_r($user_id['id']);
-    //die();
+    $request = new CreateUpdateUserRequest();
+    $errors = $request->validateUpdate($_POST);
+    if ($errors) 
+    {
     $user = new User();
     $_POST['password'] = md5($_POST['password']);
     try {
@@ -157,15 +155,13 @@ class UserController extends BackendController
         $_POST['user_id'] = $_POST['id'];
 
         $user_id = $userDetail->getId($_POST);
-        //
+
         $details['user_id'] = $_POST['user_id'];
         ($_POST['name'] == '') ? $details['name'] = NULL : $details['name'] = $_POST['name'];
         ($_POST['identification_number'] == '') ? $details['identification_number'] = NULL : $details['identification_number'] = $_POST['identification_number'];
         ($_POST['phone_number'] == '') ? $details['phone_number'] = NULL : $details['phone_number'] = $_POST['phone_number'];
         ($_POST['phone_number'] == '') ? $details['address'] = NULL : $details['address'] = $_POST['address'];
-        // 
-        //print_r($details);
-        //die();
+
         if ($userDetail->update($details, $user_id['id'])) {
           Flash::set('success', 'Sửa tài khoản thành công!');
         } else {
@@ -177,6 +173,10 @@ class UserController extends BackendController
     } catch (Exception $e) {
       Flash::set('error', $e->getMessage());
     } finally {
+      return redirect('admin/user/detail', ['id' => $_POST['id']]);
+    }
+    } 
+    else {
       return redirect('admin/user/detail', ['id' => $_POST['id']]);
     }
   }
