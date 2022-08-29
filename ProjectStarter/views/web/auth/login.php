@@ -3,11 +3,15 @@
 <?php require_once('views/web/layouts/index.php') ?>
 
 <?php startblock('content') ?>
+<?php require_once('views/web/layouts/includes/header.php') ?>
 <div class="account">
     <div class="container">
         <h1>Account</h1>
         <div class="account_grid">
             <div class="col-md-6 login-right">
+                <?php if(Flash::has('success')){
+                    echo "Đăng ký thành công";
+                } ?>
 
                 <form method="POST" action="<?php echo url('auth/handleLogin') ?>">
                     <div>
@@ -49,5 +53,6 @@
         </div>
     </div>
 </div>
+<?php require_once('views/web/layouts/includes/footer.php') ?>
 
 <?php endblock() ?>

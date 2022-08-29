@@ -40,10 +40,10 @@ class AuthController extends WebController
 
     public function handleRegister()
     {
-      dd($_POST);
+      // dd($_POST);
       $authRequest = new AuthRequest();
       $errors = $authRequest->validateRegister($_POST);
-      //dd($errors);
+      // dd($errors);
       if( count($errors) == 0 )
       {
         //dd('dang ky');
@@ -51,20 +51,21 @@ class AuthController extends WebController
         $user = new User();
         $_POST['role_id'] = 2;
         $_POST['password']=md5($_POST['password']);
-        //dd($_POST);
+        // dd($_POST);
 
-        //dd($user->create($_POST));
+        // dd($user->create($_POST));
         if($user->create($_POST))
         {
-          //echo 1;
-          Flash::set('error', 'Đăng ký thành công!');
-          return redirect('auth/login');
+          // echo 1;
+          Flash::set('success', 'Đăng ký thành công!');
+
+          return $this->view('auth/success.php');
         }
         else
         {
-          //echo 0;
+          echo 0;
           Flash::set('error', 'Đăng ký thất bại!');
-          return redirect('auth/register' );
+          // return redirect('auth/register' );
         }
 
         // dd($_POST);
