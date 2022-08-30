@@ -180,4 +180,37 @@ class UserController extends BackendController
       return redirect('admin/user/detail', ['id' => $_POST['id']]);
     }
   }
+
+  public function handleDelete()
+  {
+    $id = $_GET['id'];
+    try 
+    {
+      $user = new User();
+      if ( $user->delete($id) )
+      {
+        $detail = new UserDetail();
+        if( $detail->delete($id) )
+        {
+          Flash::set('success', 'Xoá tài khoản thành công!');
+        }
+        else
+        {
+          throw new Exception('Xóa tài khoản không thành công!');
+        }
+      }
+      else
+      {
+        throw new Exception('Xóa tài khoản không thành công!');
+      }
+    }
+    catch (Exception $e)
+    {
+      Flash::set('error', $e->getMessage());
+    }
+    finally
+    {
+      return redirect('admin/user');
+    }
+  }
 }

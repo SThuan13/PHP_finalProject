@@ -1,6 +1,6 @@
 <?php
 require_once('app/Controllers/Admin/BackendController.php');
-//require_once('app/Requests/Admin/CreateUpdateCategoryRequest.php');
+require_once('app/Requests/Admin/OrderRequest.php');
 require_once('app/Models/Order.php');
 require_once('app/Models/OrderDetail.php');
 require_once('app/Models/User.php');
@@ -93,14 +93,16 @@ class OrderController extends BackendController
   
   public function handleCreate()
   {
-    // $cruRequest = new CreateUpdateCategoryRequest();
-    // $errors = $cruRequest->validateCreateUpdate($_POST);
-    // if( $errors )
-    // {
+    $request = new orderRequest();
+    $errors = $request->validateCreateUpdate($_POST);
+    if( $errors )
+    {
       try 
       {
         $order = new Order();
         $orderDetail = new OrderDetail();
+
+        $product = new Product();
 
         $date = new DateTime("now", new DateTimeZone('Asia/Ho_Chi_Minh') );
         $_POST['date_created'] = $date->format('Y-m-d H:i:s');
@@ -111,15 +113,21 @@ class OrderController extends BackendController
           $order_id = $id['id'];
 
           $detail = array();
-          for ( $i = 0 ; $i < count($_POST['oderDetail']['product']['product_id']); $i ++)
+          for ( $i = 0 ; $i < count($_POST['orderDetail']['product']['product_id']); $i ++)
           {
-            $detail[$i] = array('product_id'=>$_POST['oderDetail']['product']['product_id'][$i], 'quantity'=>$_POST['oderDetail']['product']['quantity'][$i], 'order_id'=>$order_id);
+            $detail[$i] = array('product_id'=>$_POST['orderDetail']['product']['product_id'][$i], 'quantity'=>$_POST['orderDetail']['product']['quantity'][$i], 'order_id'=>$order_id);
           }
 
           foreach($detail as $item)
           {
-            $orderDetail->create($item);
+            if ($orderDetail->create($item))
+            {
+              $product = $product->find($item['product_id']);
+              $_POST['finalPrice'] += $item['quantity'] * ($product['base_price'] + $product['tax']);
+            }
           }
+
+
           Flash::set('success', 'Tạo đơn hàng thành công!');
         }
         else 
@@ -135,48 +143,48 @@ class OrderController extends BackendController
       {
         return redirect('admin/order/create' );
       }
-    // }
-    // else 
-    // {
-    //   return redirect('admin/category/create');
-    // }
+    }
+    else 
+    {
+      return redirect('admin/order/create');
+    }
   }
 
   public function handleUpdate()
   {
     //dd($_POST);
-    // $cruRequest = new CreateUpdateCategoryRequest();
-    // $errors = $cruRequest->validateCreateUpdate($_POST);
-    // if( $errors )
-    // {
-    try 
+    $request = new orderRequest();
+    $errors = $request->validateCreateUpdate($_POST);
+    if( $errors )
     {
-      $date = new DateTime("now", new DateTimeZone('Asia/Ho_Chi_Minh') );
-      $_POST['date_modified'] = $date->format('Y-m-d H:i:s');
-      //dd($_POST);
-      $order = new Order();
-      if ( $order->update($_POST, $_POST['id']) )
-      { 
-        $this->handleUpdateProductList();
-        Flash::set('success', 'Chỉnh sửa đơn hàng thành công!');
+      try 
+      {
+        $date = new DateTime("now", new DateTimeZone('Asia/Ho_Chi_Minh') );
+        $_POST['date_modified'] = $date->format('Y-m-d H:i:s');
+        //dd($_POST);
+        $order = new Order();
+        if ( $order->update($_POST, $_POST['id']) )
+        { 
+          $this->handleUpdateProductList();
+          Flash::set('success', 'Chỉnh sửa đơn hàng thành công!');
+        }
+        else {  
+          throw new Exception('Chỉnh sửa đơn hàng không thành công!');
+        }
       }
-      else {  
-        throw new Exception('Chỉnh sửa đơn hàng không thành công!');
+      catch (Exception $e)
+      {
+        Flash::set('error', $e->getMessage());
+      }
+      finally
+      {
+        return redirect('admin/order/detail', ['id'=>$_POST['id']]);
       }
     }
-    catch (Exception $e)
-    {
-      Flash::set('error', $e->getMessage());
-    }
-    finally
+    else 
     {
       return redirect('admin/order/detail', ['id'=>$_POST['id']]);
     }
-    // }
-    // else 
-    // {
-    //   return redirect('admin/category/create');
-    // }
   }
 
   public function handleUpdateProductList()
@@ -188,15 +196,16 @@ class OrderController extends BackendController
     $orderDetails = $orderDetails->getAll($sql);
 
     $detail = array();
-    for ( $i = 0 ; $i < count($_POST['oderDetail']['product']['product_id']); $i ++)
+    for ( $i = 0 ; $i < count($_POST['orderDetail']['product']['product_id']); $i ++)
     {
-      $detail[$i] = array('id'=>$_POST['oderDetail']['product']['id'][$i] ,'product_id'=>$_POST['oderDetail']['product']['product_id'][$i], 'quantity'=>$_POST['oderDetail']['product']['quantity'][$i], 'order_id'=>$id);
+      $detail[$i] = array('id'=>$_POST['orderDetail']['product']['id'][$i] ,'product_id'=>$_POST['orderDetail']['product']['product_id'][$i], 'quantity'=>$_POST['orderDetail']['product']['quantity'][$i], 'order_id'=>$id);
     }
 
     foreach( $detail as $item)
     {
       if ($item['id'] != 0)
       {
+        //so sánh 
         if ($this->exactRecord($orderDetails, $item))
         {
           $orderDetail->update($item, $item['id']);
@@ -209,6 +218,7 @@ class OrderController extends BackendController
     }
   }
 
+  //hàm xét xem 1 bản ghi có giống hết với bản ghi ở trong csdl không; có return false; không return true
   public function exactRecord($orderDetails, $item)
   {
     foreach($orderDetails as $baseDetail)

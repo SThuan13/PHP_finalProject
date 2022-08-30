@@ -6,7 +6,7 @@ class Order extends Model
 {
   protected $table = 'orders';
 
-  protected $fillable = ['id', 'note',  'user_id', 'voucher_id', 'final_price', 'status', 'date_created', 'date_modified'];
+  protected $fillable = ['id', 'note',  'user_id',  'finalPrice', 'status', 'date_created', 'date_modified'];
 
 
   public function getId($data)

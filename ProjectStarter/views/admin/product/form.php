@@ -47,9 +47,23 @@
               >
             </div>
           </div>
+
           <div class="col-md-6">
             <div class="input-group input-group-static my-3">
-              <label class="">Mô tả</label>
+              <label class="=">Nhãn hiệu <span style="color: red;">*</span></label>
+              <select class="form-control form-select" name="brand_id">
+                <?php
+                  foreach($brands as $brand){?>
+                  <option 
+                    value="<?php echo $brand['id']?>" 
+                    <?php if(isset($product)) {?>
+                      <?php if($product['brand_id'] == $brand['id']) {echo 'selected'; } ?>
+                    <?php }?>
+                  >
+                    <?php echo $brand['name']?>
+                  </option>
+                <?php }?>
+              </select>
             </div>
           </div>
         </div>
@@ -87,18 +101,32 @@
         <div class="row gx-5">
           <div class="col-md-6">
             <div div class="input-group input-group-static my-3">
-              <label class="">Giá gốc</label>
-              <input type="number" name="base_price" class="form-control"  
+              <label class="">Giá gốc
+                <span style="color: red;">*</span> 
+                <?php if(Flash::has('basePrice-error')) { ?>
+                  <div class="invalid-feedback" style="display: inline;">
+                    <?php echo Flash::get('basePrice-error')?>
+                  </div>
+                <?php } ?> 
+              </label>
+              <input type="number" min=1 name="basePrice" class="form-control"  
               <?php if(isset($product)) {?> 
-                value="<?php if(isset($product['base_price'])){echo $product['base_price'];} else {echo '';}?>" 
+                value="<?php if(isset($product['basePrice'])){echo $product['basePrice'];} else {echo '';}?>" 
               <?php }?>>
             </div>
           </div>
 
           <div class="col-md-6">
             <div div class="input-group input-group-static my-3">
-              <label class="">Tax</label>
-              <input type="number" name="tax" class="form-control"  
+              <label class="">Tax
+                <span style="color: red;">*</span> 
+                  <?php if(Flash::has('tax-error')) { ?>
+                    <div class="invalid-feedback" style="display: inline;">
+                      <?php echo Flash::get('tax-error')?>
+                    </div>
+                  <?php } ?> 
+              </label>
+              <input type="number" min=1 name="tax" class="form-control"  
               <?php if(isset($product)) {?> 
                 value="<?php if(isset($product['tax'])){echo $product['tax'];} else {echo '';}?>" 
               <?php }?>>
