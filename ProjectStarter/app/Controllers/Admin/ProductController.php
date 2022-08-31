@@ -51,9 +51,6 @@ class ProductController extends BackendController
             from products 
             LIMIT $this->take OFFSET $this->offSet";
     $products = $products->getAll($sql);
-
-    //dd(count($products));
-    //echo $page;
     return $this->view('product/list.php', compact('products','page','take')) ;
     
   }
@@ -147,7 +144,7 @@ class ProductController extends BackendController
     }
   }
 
-  public function handleUploadImages()
+  public function handleUpldate()
   {
     $request = new productRequest();
     $errors = $request->validateCreateUpdate($_POST);
@@ -159,10 +156,10 @@ class ProductController extends BackendController
         $product = new Product();
         if ( $product->update($_POST, $_POST['id']) )
         { 
-            Flash::set('success', 'Chỉnh sửa danh mục thành công!');
+            Flash::set('success', 'Chỉnh sửa sản phẩm thành công!');
         }
         else {
-          throw new Exception('Chỉnh sửa danh mục không thành công!');
+          throw new Exception('Chỉnh sửa sản phẩm không thành công!');
         }
       }
       catch (Exception $e)

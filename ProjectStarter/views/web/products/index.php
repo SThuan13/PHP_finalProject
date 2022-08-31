@@ -40,11 +40,18 @@
             <!--categories-->
             <div class=" rsidebar span_1_of_left">
                 <h3 class="cate">Categories</h3>
-                <ul class="menu-drop">
-                    <?php foreach($categories as $category) { ?>
-                        <li class="item1"><a href="#"><?php echo $category['name']?></a></li>
-                    <?php } ?>
-                </ul>
+                <div class="h_nav">
+                    <ul class="">
+                        <?php foreach($categories as $category) { ?>
+                            <li class="">
+                                <a href="<?php echo url('category/index', ['id'=>$category['id']])?>">
+                                    <?php echo $category['name']?>
+                                </a>
+                            </li>
+                        <?php } ?>
+                    </ul>
+                </div>
+                
             </div>
 
             <!--initiate accordion-->
