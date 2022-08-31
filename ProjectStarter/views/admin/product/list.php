@@ -44,6 +44,7 @@
                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">ID</th>
                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tên</th>
                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Hình ảnh</th>
+
                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"></th>
                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"></th>
                   </tr>
@@ -59,7 +60,6 @@
                           <?php echo $product['id'];?>
                         </div>
                       </div>
-                    </td>
                     <td >
                       <?php echo $product['name'];?>
                     </td>

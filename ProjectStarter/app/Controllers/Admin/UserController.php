@@ -161,7 +161,6 @@ class UserController extends BackendController
         ($_POST['identification_number'] == '') ? $details['identification_number'] = NULL : $details['identification_number'] = $_POST['identification_number'];
         ($_POST['phone_number'] == '') ? $details['phone_number'] = NULL : $details['phone_number'] = $_POST['phone_number'];
         ($_POST['phone_number'] == '') ? $details['address'] = NULL : $details['address'] = $_POST['address'];
-
         if ($userDetail->update($details, $user_id['id'])) {
           Flash::set('success', 'Sửa tài khoản thành công!');
         } else {

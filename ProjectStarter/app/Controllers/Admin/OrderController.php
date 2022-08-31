@@ -1,4 +1,5 @@
 <?php
+
 require_once('app/Controllers/Admin/BackendController.php');
 require_once('app/Requests/Admin/OrderRequest.php');
 require_once('app/Models/Order.php');
@@ -51,6 +52,7 @@ class OrderController extends BackendController
     $orders = new Order();
 
     $sql = "SELECT orders.id, note, status, user_details.name as name, date_created from orders, user_details 
+
             where user_details.id = orders.user_id 
             LIMIT $this->take OFFSET $this->offSet";
     $orders =  $orders->getAll($sql);
@@ -64,6 +66,7 @@ class OrderController extends BackendController
     $order = new Order();
     $order =  $order->find($id);
     
+
     $orderDetails = new OrderDetail();
     $sql = "SELECT * FROM order_details WHERE order_details.order_id = $id";
     $orderDetails = $orderDetails->getAll($sql);
@@ -78,6 +81,7 @@ class OrderController extends BackendController
     // $sql = "SELECT * FROM users WHERE users.id = $user_id";
 
     return $this->view('order/form.php', compact('order', 'orderDetails','users','products')) ;
+
   }
 
   public function create()
@@ -148,6 +152,7 @@ class OrderController extends BackendController
     {
       return redirect('admin/order/create');
     }
+
   }
 
   public function handleUpdate()

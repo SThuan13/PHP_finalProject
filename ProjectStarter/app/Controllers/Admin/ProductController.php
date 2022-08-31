@@ -78,7 +78,6 @@ class ProductController extends BackendController
   {
     $categories = new Category();
     $categories = $categories->findAll();
-
     $brands = new Brand();
     $brands = $brands->findAll();
 
@@ -148,7 +147,7 @@ class ProductController extends BackendController
     }
   }
 
-  public function handleUpdate()
+  public function handleUploadImages()
   {
     $request = new productRequest();
     $errors = $request->validateCreateUpdate($_POST);

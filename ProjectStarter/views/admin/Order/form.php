@@ -47,7 +47,6 @@
                 >
               </div>
             </div>
-            
             <div class="col-md-6">
               <div class="input-group input-group-static my-3">
                 <label class="" for="status">Trạng thái</label>
@@ -69,7 +68,6 @@
                 </select>
               </div>
             </div>
-
           </div>
 
           <div class="row">
@@ -126,6 +124,7 @@
                 <label class="col-12" for="note">Ghi chú</label>
                 <textarea id="note" name="note" class="form-control" rows="1">
                   <?php if(isset($order)) echo $order['note']; ?>
+
                 </textarea> 
               </div>
             </div>
