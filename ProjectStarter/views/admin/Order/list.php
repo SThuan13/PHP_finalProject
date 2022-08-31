@@ -45,9 +45,9 @@
                 <tr>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">ID</th>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Mô tả</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Trạng thái</th>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Người tạo</th>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Ngày tạo</th>
-                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"></th>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"></th>
                 </tr>
               </thead>
@@ -68,24 +68,29 @@
                           </div>
                         </td>
                         <td>
-                          <?php echo $order['description'];?>
+                          <?php echo $order['note'];?>
+                        </td>
+                        <td>
+                          <?php 
+                            if( $order['status'] == 0 )
+                            echo 'Mới';
+                            if( $order['status'] == -1 )
+                            echo 'Hủy';
+                            if( $order['status'] == 1 )
+                            echo 'Đã thanh toán';
+                          ?>
                         </td>
                         <td class="text-sm">
                           <?php echo $order['name'];?>
                         </td>
                         <td class="text-sm">
-                          <?php echo $order['date_created'];?>
+                          <?php echo date("Y-m-d",strtotime($order['date_created']));?>
                         </td>
                         <td class="align-middle">
                           <a href="<?php echo url('admin/order/detail', ['id'=>$order['id']])?>" class="text-secondary font-weight-normal text-xs" data-toggle="tooltip">
                             Edit
                           </a>
                         </td>
-                        <td class="align-middle">
-                          <a href="<?php echo url('admin/order/handledelete', ['id'=>$order['id']])?>" class="text-secondary font-weight-normal text-xs" data-toggle="tooltip" data-original-title="Edit cate$category">
-                            Delete
-                          </a>
-                        </td> 
                       </tr>
                 <?php }
                   }

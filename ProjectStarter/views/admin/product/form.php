@@ -47,13 +47,23 @@
               >
             </div>
           </div>
+
           <div class="col-md-6">
             <div class="input-group input-group-static my-3">
-              <label class="">Mô tả</label>
-              <input type="text" name="description" class="form-control"  
-              <?php if(isset($product)) {?> 
-                value="<?php if(isset($product['description'])){echo $product['description'];} else {echo '';}?>" 
-              <?php }?>>
+              <label class="=">Nhãn hiệu <span style="color: red;">*</span></label>
+              <select class="form-control form-select" name="brand_id">
+                <?php
+                  foreach($brands as $brand){?>
+                  <option 
+                    value="<?php echo $brand['id']?>" 
+                    <?php if(isset($product)) {?>
+                      <?php if($product['brand_id'] == $brand['id']) {echo 'selected'; } ?>
+                    <?php }?>
+                  >
+                    <?php echo $brand['name']?>
+                  </option>
+                <?php }?>
+              </select>
             </div>
           </div>
         </div>
@@ -69,34 +79,6 @@
             </div>
           </div>
           <div class="col-md-6">
-            
-          </div>
-        </div>
-
-        <div class="row gx-5">
-          <div class="col-md-6">
-            <div div class="input-group input-group-static my-3">
-              <label class="">tax</label>
-              <input type="number" name="tax" class="form-control"  
-              <?php if(isset($product)) {?> 
-                value="<?php if(isset($product['tax'])){echo $product['tax'];} else {echo '';}?>" 
-              <?php }?>>
-            </div>
-          </div>
-
-          <div class="col-md-6">
-            <div div class="input-group input-group-static my-3">
-              <label class="">Giá gốc</label>
-              <input type="number" name="base_price" class="form-control"  
-              <?php if(isset($product)) {?> 
-                value="<?php if(isset($product['base_price'])){echo $product['base_price'];} else {echo '';}?>" 
-              <?php }?>>
-            </div>
-          </div>
-        </div>
-
-        <div class="row gx-5">
-          <div class="col-6">
             <div class="input-group input-group-static  my-3">
               <label class="=">Danh mục <span style="color: red;">*</span></label>
               <select class="form-control form-select" name="category_id">
@@ -112,6 +94,53 @@
                   </option>
                 <?php }?>
               </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="row gx-5">
+          <div class="col-md-6">
+            <div div class="input-group input-group-static my-3">
+              <label class="">Giá gốc
+                <span style="color: red;">*</span> 
+                <?php if(Flash::has('basePrice-error')) { ?>
+                  <div class="invalid-feedback" style="display: inline;">
+                    <?php echo Flash::get('basePrice-error')?>
+                  </div>
+                <?php } ?> 
+              </label>
+              <input type="number" min=1 name="basePrice" class="form-control"  
+              <?php if(isset($product)) {?> 
+                value="<?php if(isset($product['basePrice'])){echo $product['basePrice'];} else {echo '';}?>" 
+              <?php }?>>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div div class="input-group input-group-static my-3">
+              <label class="">Tax
+                <span style="color: red;">*</span> 
+                  <?php if(Flash::has('tax-error')) { ?>
+                    <div class="invalid-feedback" style="display: inline;">
+                      <?php echo Flash::get('tax-error')?>
+                    </div>
+                  <?php } ?> 
+              </label>
+              <input type="number" min=1 name="tax" class="form-control"  
+              <?php if(isset($product)) {?> 
+                value="<?php if(isset($product['tax'])){echo $product['tax'];} else {echo '';}?>" 
+              <?php }?>>
+            </div>
+          </div>
+        </div>
+
+        <div class="row gx-5">
+          <div class="col">
+            <div class="input-group input-group-static my-3">
+              <label class="col-12" for="description">Mô tả</label>
+              <textarea id="description" name="description" class="form-control" rows="1">
+                <?php if(isset($product)) echo $product['description']; ?>
+              </textarea> 
             </div>
           </div>
 

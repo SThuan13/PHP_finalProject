@@ -1,7 +1,7 @@
 <?php
-  
+
 require_once('app/Controllers/Admin/BackendController.php');
-//require_once('app/Requests/Admin/CreateUpdateCategoryRequest.php');
+require_once('app/Requests/Admin/OrderRequest.php');
 require_once('app/Models/Order.php');
 require_once('app/Models/OrderDetail.php');
 require_once('app/Models/User.php');
@@ -51,7 +51,8 @@ class OrderController extends BackendController
 
     $orders = new Order();
 
-    $sql = "SELECT orders.id, description, user_details.name as name, date_created from orders, user_details 
+    $sql = "SELECT orders.id, note, status, user_details.name as name, date_created from orders, user_details 
+
             where user_details.id = orders.user_id 
             LIMIT $this->take OFFSET $this->offSet";
     $orders =  $orders->getAll($sql);
@@ -65,16 +66,22 @@ class OrderController extends BackendController
     $order = new Order();
     $order =  $order->find($id);
     
-    $orderDetail = new OrderDetail();
+
+    $orderDetails = new OrderDetail();
     $sql = "SELECT * FROM order_details WHERE order_details.order_id = $id";
-    $orderDetail = $orderDetail->getFirst($sql);
+    $orderDetails = $orderDetails->getAll($sql);
     //$orderDetail = $orderDetail->find($)
 
-    $user = new User();
-    $user_id = $order['user_id'];
-    $sql = "SELECT * FROM users WHERE users.id = $user_id";
+    $products = new Product();
+    $products  = $products->findAll();
 
-    return $this->view('order/form.php', compact('order', 'orderDetail')) ;
+    $users = new User();
+    $users = $users->findAll();
+    // $user_id = $order['user_id'];
+    // $sql = "SELECT * FROM users WHERE users.id = $user_id";
+
+    return $this->view('order/form.php', compact('order', 'orderDetails','users','products')) ;
+
   }
 
   public function create()
@@ -84,83 +91,153 @@ class OrderController extends BackendController
 
     $products = new Product();
     $products = $products->findAll();
-    //dd($products);
-    //dd($user);
-
-    //$orderDetail = 
 
     return $this->view('order/form.php', compact('users', 'products')) ;
   }
   
   public function handleCreate()
   {
-    // dd($file);
-    // dd($_POST);
-    // $cruRequest = new CreateUpdateCategoryRequest();
-    // $errors = $cruRequest->validateCreateUpdate($_POST);
-    // if( $errors )
-    // {
-      // try 
-      // {
-        // $order = new Order();
+    $request = new orderRequest();
+    $errors = $request->validateCreateUpdate($_POST);
+    if( $errors )
+    {
+      try 
+      {
+        $order = new Order();
+        $orderDetail = new OrderDetail();
+
+        $product = new Product();
+
+        $date = new DateTime("now", new DateTimeZone('Asia/Ho_Chi_Minh') );
+        $_POST['date_created'] = $date->format('Y-m-d H:i:s');
         
-        //}
-        // if ( $order->create($_POST) )
-        // { 
-        //     Flash::set('success', 'Tạo đơn hàng thành công!');
-        // }
-        // else 
-        // {
-        //   throw new Exception('Tạo đơn hàng không thành công!');
-        // }
-      // }
-      // catch (Exception $e)
-      // {
-      //   Flash::set('error', $e->getMessage());
-      // }
-      // finally
-      // {
-      //   return redirect('admin/order/create' );
-      // }
-    // }
-    // else 
-    // {
-    //   return redirect('admin/category/create');
-    // }
+        if( $order->create($_POST) )
+        { 
+          $id = $order->getId($_POST);
+          $order_id = $id['id'];
+
+          $detail = array();
+          for ( $i = 0 ; $i < count($_POST['orderDetail']['product']['product_id']); $i ++)
+          {
+            $detail[$i] = array('product_id'=>$_POST['orderDetail']['product']['product_id'][$i], 'quantity'=>$_POST['orderDetail']['product']['quantity'][$i], 'order_id'=>$order_id);
+          }
+
+          foreach($detail as $item)
+          {
+            if ($orderDetail->create($item))
+            {
+              $product = $product->find($item['product_id']);
+              $_POST['finalPrice'] += $item['quantity'] * ($product['base_price'] + $product['tax']);
+            }
+          }
+
+
+          Flash::set('success', 'Tạo đơn hàng thành công!');
+        }
+        else 
+        {
+          throw new Exception('Tạo đơn hàng không thành công!');
+        }
+      }
+      catch (Exception $e)
+      {
+        Flash::set('error', $e->getMessage());
+      }
+      finally
+      {
+        return redirect('admin/order/create' );
+      }
+    }
+    else 
+    {
+      return redirect('admin/order/create');
+    }
+
   }
 
   public function handleUpdate()
   {
-    // $cruRequest = new CreateUpdateCategoryRequest();
-    // $errors = $cruRequest->validateCreateUpdate($_POST);
-    // if( $errors )
-    // {
-    try 
+    //dd($_POST);
+    $request = new orderRequest();
+    $errors = $request->validateCreateUpdate($_POST);
+    if( $errors )
     {
-      $order = new Order();
-      if ( $order->update($_POST, $_POST['id']) )
-      { 
+      try 
+      {
+        $date = new DateTime("now", new DateTimeZone('Asia/Ho_Chi_Minh') );
+        $_POST['date_modified'] = $date->format('Y-m-d H:i:s');
+        //dd($_POST);
+        $order = new Order();
+        if ( $order->update($_POST, $_POST['id']) )
+        { 
+          $this->handleUpdateProductList();
           Flash::set('success', 'Chỉnh sửa đơn hàng thành công!');
+        }
+        else {  
+          throw new Exception('Chỉnh sửa đơn hàng không thành công!');
+        }
       }
-      else {
-        throw new Exception('Chỉnh sửa đơn hàng không thành công!');
+      catch (Exception $e)
+      {
+        Flash::set('error', $e->getMessage());
+      }
+      finally
+      {
+        return redirect('admin/order/detail', ['id'=>$_POST['id']]);
       }
     }
-    catch (Exception $e)
-    {
-      Flash::set('error', $e->getMessage());
-    }
-    finally
+    else 
     {
       return redirect('admin/order/detail', ['id'=>$_POST['id']]);
     }
-    // }
-    // else 
-    // {
-    //   return redirect('admin/category/create');
-    // }
   }
 
+  public function handleUpdateProductList()
+  {
+    $id = $_POST['id'];
+    $orderDetails = new OrderDetail();
+    $orderDetail = new OrderDetail();
+    $sql = "SELECT * FROM order_details WHERE order_details.order_id = $id";
+    $orderDetails = $orderDetails->getAll($sql);
+
+    $detail = array();
+    for ( $i = 0 ; $i < count($_POST['orderDetail']['product']['product_id']); $i ++)
+    {
+      $detail[$i] = array('id'=>$_POST['orderDetail']['product']['id'][$i] ,'product_id'=>$_POST['orderDetail']['product']['product_id'][$i], 'quantity'=>$_POST['orderDetail']['product']['quantity'][$i], 'order_id'=>$id);
+    }
+
+    foreach( $detail as $item)
+    {
+      if ($item['id'] != 0)
+      {
+        //so sánh 
+        if ($this->exactRecord($orderDetails, $item))
+        {
+          $orderDetail->update($item, $item['id']);
+        }
+      }
+      else 
+      {
+        $orderDetail->create($item);
+      }
+    }
+  }
+
+  //hàm xét xem 1 bản ghi có giống hết với bản ghi ở trong csdl không; có return false; không return true
+  public function exactRecord($orderDetails, $item)
+  {
+    foreach($orderDetails as $baseDetail)
+    {
+      if($baseDetail == $item)
+      {
+        return false;
+      }
+      else 
+      {
+        return true; 
+      }
+    }
+  }
   
 }
 ?>

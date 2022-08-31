@@ -1,4 +1,5 @@
 <?php require_once('views/admin/layouts/index.php')?>
+
 <?php 
   if(isset($_GET['page']))
   {
@@ -12,7 +13,7 @@
 ?>
 
 <?php startblock('title')?>
-  Products management
+  Brand management
 <?php endblock()?>
 
 <?php startblock('content') ?>
@@ -28,10 +29,10 @@
           <div class="card-header pb-0">
             <div class="row">
               <div class="col-6 col-sm-11 col-md-10 col-lg-11">
-                <h6>SẢN PHẨM</h6>
+                <h6>NHÃN HIỆU</h6>
               </div>
               <div class="col-6 col-sm-1 col-md-2 col-lg-1">
-                <a href="<?php echo url('admin/product/create')?>" class="btn bg-gradient-primary ">Tạo</a>
+                <a href="<?php echo url('admin/brand/create')?>" class="btn bg-gradient-primary ">Tạo</a>
               </div>
             </div>
           </div>
@@ -43,28 +44,34 @@
                   <tr>
                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">ID</th>
                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tên</th>
-                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Hình ảnh</th>
-
-                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"></th>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Status</th>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">IMG</th>
                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"></th>
                   </tr>
                 </thead>
                 <tbody>
                   <?php 
-                    if ($products) {
-                      foreach($products as $product) {?>
+                  if($brands)
+                  {
+                    foreach($brands as $brand) {?>
                   <tr>
                     <td>
                       <div class="d-flex px-2 py-1">
                         <div class="d-flex flex-column justify-content-center">
-                          <?php echo $product['id'];?>
+                          <?php echo $brand['id'];?>
+                          <!-- <h6 class="mb-0 text-xs">John Michael</h6>
+                          <p class="text-xs text-secondary mb-0">john@creative-tim.com</p> -->
                         </div>
                       </div>
-                    <td >
-                      <?php echo $product['name'];?>
+                    </td>
+                    <td>
+                      <?php echo $brand['name'];?>
+                    </td>
+                    <td class="text-sm">
+                      <?php echo $brand['status'];?>
                     </td>
                     <td class="">
-                      <?php $img = json_decode($product['img'])?>
+                      <?php $img = json_decode($brand['img'])?>
                         <img class="img shadow border-radius-xl" 
                           style="width:125px ; height:125px; object-fit: contain"
                           src="<?php echo asset("storage/{$img[0]}") ?>" 
@@ -72,15 +79,15 @@
                         >               
                     </td>
                     <td class="align-middle">
-                      <a href="<?php echo url('admin/product/detail', ['id'=>$product['id']])?>" class="text-secondary font-weight-normal text-xs" data-toggle="tooltip">
+                      <a href="<?php echo url('admin/brand/detail', ['id'=>$brand['id']])?>" class="text-secondary font-weight-normal text-xs" data-toggle="tooltip">
                         Edit
                       </a>
                     </td>
-                    <td class="align-middle">
-                      <a href="<?php echo url('admin/product/handledelete', ['id'=>$product['id']])?>" class="text-secondary font-weight-normal text-xs" data-toggle="tooltip" data-original-title="Edit cate$category">
+                    <!-- <td class="align-middle">
+                      <a href="" class="text-secondary font-weight-normal text-xs" data-toggle="tooltip" data-original-title="Edit cate$category">
                         Delete
                       </a>
-                    </td> 
+                    </td>  -->
                   </tr>
                   <?php }
                   }
@@ -94,39 +101,43 @@
             </div>
           </div>
 
-          <?php if($products) {?>
+          <?php if($brands) {?>
             <div class="card-footer p-1"> 
               <ul class="offset-sm-9 col-sm-2 pagination pagination-primary mb-1">
                 <li class="page-item">
-                  <a class="page-link" href="<?php echo url('admin/product')?>">
+                  <a class="page-link" href="<?php echo url('admin/brand')?>">
                     <i class="fas fa-caret-left"></i>
                   </a>
                 </li>
+
                 <li class="page-item <?php if( $page == 1 ) { echo "disabled"; } ?>">
                   <a class="page-link" 
                     onclick="<?php if($page > 1) {$page -= 1;} ?>" 
                     href="<?php 
-                      echo url('admin/product', ['page'=>$page])
+                      echo url('admin/brand', ['page'=>$page])
                     ?>"
                   >
                     <i class="fas fa-angle-left"></i>
                   </a>
                 </li>
+
                 <li class="page-item active">
                   <a class="page-link text-white" >
                     <?php echo $_GET['page']?>
                   </a>
                 </li>
-                <li class="page-item <?php if(count($products) < ($page*$take)){echo "disabled";} ?>">
+
+                <li class="page-item <?php if(count($categories) < ($page*$take)){echo "disabled";} ?>">
                   <a class="page-link" 
                     onclick="<?php $page = $_GET['page'] + 1; ?>" 
                     href="<?php 
-                      echo url('admin/product', ['page'=>$page]);
+                      echo url('admin/brand', ['page'=>$page]);
                     ?>"
                   >
                     <i class="fas fa-angle-right"></i>
                   </a>
                 </li>
+
                 <li class="page-item">
                   <button 
                     class="page-link"
@@ -134,9 +145,6 @@
                   >
                     <i class="fas fa-caret-right"></i>
                   </button>
-                  <!-- <a class="page-link" href="#link">
-                    
-                  </a> -->
                 </li>
               </ul>
             </div>
@@ -145,6 +153,5 @@
       </div>
     </div>
   </main>
-
   
 <?php endblock() ?>

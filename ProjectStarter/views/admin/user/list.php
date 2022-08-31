@@ -82,7 +82,7 @@
                       </a>
                     </td>
                     <td class="align-middle">
-                      <a href="" class="text-secondary font-weight-normal text-xs" data-toggle="tooltip" data-original-title="Edit user">
+                      <a href="<?php echo url('admin/user/handledelete', ['id'=>$user['id']])?>" class="text-secondary font-weight-normal text-xs" data-toggle="tooltip" data-original-title="Edit user">
                         Delete
                       </a>
                     </td>
