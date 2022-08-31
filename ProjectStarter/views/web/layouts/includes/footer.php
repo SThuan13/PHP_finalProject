@@ -18,14 +18,14 @@
 	<div class="footer-bottom">
 		<div class="container">
 				<div class="col-md-3 footer-bottom-cate">
-					<h6>Categories</h6>
-					<ul>
-						<li><a href="#">Curabitur sapien</a></li>
-						<li><a href="#">Dignissim purus</a></li>
-						<li><a href="#">Tempus pretium</a></li>
-						<li><a href="#">Dignissim neque</a></li>
-						<li><a href="#">Ornared id aliquet</a></li>
-						
+
+					<h6 >Danh mục</h6>
+					<ul >
+							<?php foreach($categories as $category) { ?>
+									<li>
+										<a href="#"><?php echo $category['name']?></a>
+									</li>
+							<?php } ?>
 					</ul>
 				</div>
 				<div class="col-md-3 footer-bottom-cate">
@@ -52,21 +52,74 @@
 						
 					</ul>
 				</div>
-				<div class="col-md-3 footer-bottom-cate cate-bottom">
-					<h6>Our Address</h6>
-					<ul>
-						<li><a href="#">Aliquam metus  dui. </a></li>
-						<li><a href="#">orci, ornareidquet</a></li>
-						<li><a href="#"> ut,DUI.</a></li>
-						<li><a href="#">nisi, dignissim</a></li>
-						<li><a href="#">gravida at.</a></li>
-						<li class="phone"><a href="#">PH : 6985792466</a></li>
-					</ul>
-				</div>
 				<div class="clearfix"> </div>
 				<p class="footer-class"> © 2015 Fashion Mania. All Rights Reserved | Design by <a href="http://w3layouts.com/" target="_blank">W3layouts</a> </p>
 			</div>
 	</div>
 </div>
 
+<!-- slide -->
+<script src="<?php echo asset('assets/web/js/jquery.min.js')?>"></script>
+<script src="<?php echo asset('assets/web/js/imagezoom.js')?>"></script>
+
+<!-- start menu -->
+<link href="<?php echo asset('assets/web/css/memenu.css')?>" rel="stylesheet" type="text/css" media="all" />
+<script type="text/javascript" src="<?php echo asset('assets/web/js/memenu.js')?>"></script>
+<script>$(document).ready(function(){$(".memenu").memenu();});</script>
+<script src="<?php echo asset('assets/web/js/simpleCart.min.js')?>"> </script>
+<!--initiate accordion-->
+	<script type="text/javascript">
+		$(function() {
+				var menu_ul = $('.menu-drop > li > ul'),
+						menu_a  = $('.menu-drop > li > a');
+				menu_ul.hide();
+				menu_a.click(function(e) {
+						e.preventDefault();
+						if(!$(this).hasClass('active')) {
+								menu_a.removeClass('active');
+								menu_ul.filter(':visible').slideUp('normal');
+								$(this).addClass('active').next().stop(true,true).slideDown('normal');
+						} else {
+								$(this).removeClass('active');
+								$(this).next().stop(true,true).slideUp('normal');
+						}
+				});
+		
+		});
+	</script>
+
+<!-- FlexSlider -->
+<script defer src="<?php echo asset('assets/web/js/jquery.flexslider.js')?>"></script>
+<link rel="stylesheet" href="<?php echo asset('assets/web/css/flexslider.css')?>" type="text/css" media="screen" />
+
+<script>
+	// Can also be used with $(document).ready()
+	$(window).load(function() {
+		$('.flexslider').flexslider({
+			animation: "slide",
+			controlNav: "thumbnails"
+		});
+	});
+</script>
+
+<!---pop-up-box---->
+<link href="<?php echo asset('assets/web/css/popuo-box.css')?>" rel="stylesheet" type="text/css" media="all"/>
+<script src="<?php echo asset('assets/web/js/jquery.magnific-popup.js')?>" type="text/javascript"></script>
+<!---//pop-up-box---->
+	<script>
+	$(document).ready(function() {
+	$('.popup-with-zoom-anim').magnificPopup({
+		type: 'inline',
+		fixedContentPos: false,
+		fixedBgPos: true,
+		overflowY: 'auto',
+		closeBtnInside: true,
+		preloader: false,
+		midClick: true,
+		removalDelay: 300,
+		mainClass: 'my-mfp-zoom-in'
+	});
+																	
+	});
+</script>	
 <!--//footer-->
