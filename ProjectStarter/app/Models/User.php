@@ -8,14 +8,15 @@ class User extends Model
 
   protected $fillable = ['id', 'email', 'password', 'account_name' , 'role_id'];
 
-  public function authenticate( $data )
+  //sửa lỗi ko truyền vào $role và so sánh role_id = 1
+  public function authenticate( $data, $role )
   {
     //print_r($data) ;
     $username = $data['username'];
     $password = md5($data['password']);
     $sql = "SELECT * FROM users 
-            WHERE ( (email = '$username')  AND (password = '$password') AND (role_id = 1))
-            OR ( (account_name = '$username' ) AND (password = '$password') AND (role_id = 1)) ";
+            WHERE ( (email = '$username')  AND (password = '$password') AND (role_id = $role))
+            OR ( (account_name = '$username' ) AND (password = '$password') AND (role_id = $role)) ";
     // echo $sql;
     // die();
     return $this->getAll($sql);

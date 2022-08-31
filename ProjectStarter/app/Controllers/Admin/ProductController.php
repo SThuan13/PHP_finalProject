@@ -3,7 +3,10 @@
 require_once('app/Controllers/Admin/BackendController.php');
 require_once('app/Models/Product.php');
 require_once('app/Models/Category.php');
+require_once('app/Models/Brand.php');
+require_once('app/Requests/Admin/ProductRequest.php');
 require_once('core/Flash.php');
+require_once('core/Storage.php');
 require_once('core/Auth.php');
 
 class ProductController extends BackendController
@@ -48,9 +51,6 @@ class ProductController extends BackendController
             from products 
             LIMIT $this->take OFFSET $this->offSet";
     $products = $products->getAll($sql);
-
-    //dd(count($products));
-    //echo $page;
     return $this->view('product/list.php', compact('products','page','take')) ;
     
   }
@@ -64,25 +64,33 @@ class ProductController extends BackendController
     $categories = new Category();
     $categories = $categories->findAll();
 
-    return $this->view('product/form.php', compact('product', 'categories')) ;
+    $brands = new Brand();
+    $brands = $brands->findAll();
+
+
+    return $this->view('product/form.php', compact('product', 'categories','brands')) ;
   }
 
   public function create()
   {
     $categories = new Category();
     $categories = $categories->findAll();
-    return $this->view('product/form.php', compact('categories'));
+    $brands = new Brand();
+    $brands = $brands->findAll();
+
+    return $this->view('product/form.php', compact('categories','brands'));
   }
   
   public function handleCreate()
   {
-    // $cruRequest = new CreateUpdateUserRequest();
-    // $errors = $cruRequest->validateCreateUpdate($_POST);
-    // if( $errors )
-    // {
+    $request = new productRequest();
+    $errors = $request->validateCreateUpdate($_POST);
+    if( $errors )
+    {
       $product = new Product();
       try 
       {
+        $this->handleUploadImages();
         if ($_POST['category_id'] == 0 ){ $_POST['category_id'] = null; } 
         if ( $product->create($_POST) )
         { 
@@ -100,31 +108,70 @@ class ProductController extends BackendController
       {
         return redirect('admin/product/create' );
       }
-    // }
-    // else 
-    // {
-    //   return redirect('admin/user/create');
-    // }
+    }
+    else 
+    {
+      return redirect('admin/product/create');
+    }
   }
 
-  public function handleUpdate()
+  public function handleUploadImages()
   {
-    try 
+    $storage = new Storage();
+    $storage->upload('images', $_FILES);
+
+    $image = array();
+    $index = 0;
+    //$count = count($_FILES['upload']['name']);
+    foreach( $_FILES['upload']['name'] as $item)
     {
-      $product = new Product();
-      if ( $product->update($_POST, $_POST['id']) )
-      { 
-          Flash::set('success', 'Chỉnh sửa danh mục thành công!');
+      $image += array($index=>"images/$item");
+      $index += 1;
+    }
+
+    $_POST['img'] = json_encode($image);
+  }
+
+  public function handleUpdateImages()
+  {
+    if(empty($_FILES))
+    {
+      unset($_POST['img']);
+    }
+    else
+    {
+      $this->handleUploadImages();
+    }
+  }
+
+  public function handleUpldate()
+  {
+    $request = new productRequest();
+    $errors = $request->validateCreateUpdate($_POST);
+    if( $errors )
+    {
+      try 
+      {
+        $this->handleUpdateImages();
+        $product = new Product();
+        if ( $product->update($_POST, $_POST['id']) )
+        { 
+            Flash::set('success', 'Chỉnh sửa sản phẩm thành công!');
+        }
+        else {
+          throw new Exception('Chỉnh sửa sản phẩm không thành công!');
+        }
       }
-      else {
-        throw new Exception('Chỉnh sửa danh mục không thành công!');
+      catch (Exception $e)
+      {
+        Flash::set('error', $e->getMessage());
+      }
+      finally
+      {
+        return redirect('admin/product/detail', ['id'=>$_POST['id']]);
       }
     }
-    catch (Exception $e)
-    {
-      Flash::set('error', $e->getMessage());
-    }
-    finally
+    else 
     {
       return redirect('admin/product/detail', ['id'=>$_POST['id']]);
     }
@@ -151,7 +198,7 @@ class ProductController extends BackendController
     }
     finally
     {
-      return redirect('admin/product/list');
+      return redirect('admin/product');
     }
   }
 }
