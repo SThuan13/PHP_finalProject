@@ -57,7 +57,7 @@
 			</table>
 
 			<div class="col-md-7">
-				<a href="#" class=" to-buy">PROCEED TO BUY</a>				
+				<a href="<?php echo url('products/index') ?>" class=" to-buy">PROCEED TO BUY</a>				
 			</div>
 			<div class="col-md-5">
 				<div class="table-total">
@@ -74,6 +74,7 @@
 						</tbody>
 					</div>
 				</div>
+				<a class="btn btn-info" href="">Thanh toán</a>
 			</div>
 
 		</div>
