@@ -46,7 +46,7 @@ class AuthController extends BackendController
     if( count($errors) == 0 )
     {
       $user = new User();
-      $user = $user->authenticate($_POST);
+      $user = $user->authenticate($_POST,1);
       
       if ( $user )
       {
