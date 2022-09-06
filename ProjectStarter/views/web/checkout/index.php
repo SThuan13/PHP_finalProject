@@ -56,25 +56,44 @@
 				<?php } ?>
 			</table>
 
-			<div class="col-md-7">
-				<a href="<?php echo url('products/index') ?>" class=" to-buy">PROCEED TO BUY</a>				
-			</div>
-			<div class="col-md-5">
-				<div class="table-total">
-					<div class="table " >
-						<tbody >
-							<tr>
-								<td>
-									Tộng Tiền thanh toán
-								</td>
-								<td>
-									<?php echo $total?>
-								</td>
-							</tr>
-						</tbody>
+			<form action="<?php echo url('checkout/handlecheckout', ['cart'=>$cart])?>" method="POST">
+				<div class="row ">
+					
+					<div class="col-md-8">
+						<div class="form-floating">
+							<textarea class="form-control" rows="3" name="note" id="floatingTextarea2" ></textarea>
+							<label for="floatingTextarea2">Ghi chú</label>
+						</div>
 					</div>
+
+					<div class="col-md-4">
+						<div class="table-total">
+							<div class="table " >
+								<tbody class="">
+									<tr class="d-flex justify-content-end">
+										<td >
+											<h4>
+												Tộng Tiền thanh toán : <?php echo $total?>
+											</h4>
+										</td>
+									</tr>
+
+									<tr>
+										<input hidden name="total" value="<?php echo $total?>">
+										<a href="<?php echo url('products/index') ?>" class=" to-buy">PROCEED TO BUY</a>
+										<button class="btn btn-info" type="submit" >Thanh toán</button>
+										<!-- <a class="btn btn-info" href="<?php echo url('checkout/handlecheckout', ['total'=>$total, 'cart'=>$cart ]) ?>">Thanh toán</a> -->
+									</tr>
+
+								</tbody>
+							</div>
+						</div>
+					</div>
+
 				</div>
-				<a class="btn btn-info" href="">Thanh toán</a>
+			</form>
+			
+			
 			</div>
 
 		</div>

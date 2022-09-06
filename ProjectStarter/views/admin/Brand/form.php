@@ -51,9 +51,8 @@
             <div class="input-group input-group-static my-3">
               <label class="">Status</label>
               <select class="form-control" name="status" aria-label="Default select example">
-                <option value="1">One</option>
-                <option value="2">Two</option>
-                <option value="3">Three</option>
+                <option value="1">Hoạt động</option>
+                <option value="0">Ngừng hoạt động</option>
               </select> 
             </div>
           </div>

@@ -83,15 +83,21 @@ class ProductController extends BackendController
   
   public function handleCreate()
   {
+    //dd($_POST);
     $request = new productRequest();
     $errors = $request->validateCreateUpdate($_POST);
     if( $errors )
     {
+      //dd(1);
       $product = new Product();
+      //$product->create($_POST);
+      //dd($product->create($_POST));
+      //dd($_POST);
       try 
       {
         $this->handleUploadImages();
-        if ($_POST['category_id'] == 0 ){ $_POST['category_id'] = null; } 
+        //if ($_POST['category_id'] == 0 ){ $_POST['category_id'] = null; } 
+
         if ( $product->create($_POST) )
         { 
             Flash::set('success', 'Tạo sản phẩm thành công!');
@@ -146,6 +152,7 @@ class ProductController extends BackendController
 
   public function handleUpldate()
   {
+    dd(1);
     $request = new productRequest();
     $errors = $request->validateCreateUpdate($_POST);
     if( $errors )

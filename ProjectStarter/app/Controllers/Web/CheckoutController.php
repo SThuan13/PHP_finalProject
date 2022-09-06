@@ -4,6 +4,8 @@ require_once('app/Models/Product.php');
 require_once('app/Models/Category.php');
 require_once('app/Models/Order.php');
 require_once('app/Models/OrderDetail.php');
+require_once('core/Flash.php');
+require_once('core/Auth.php');
 
 class CheckoutController extends WebController
 {
@@ -48,52 +50,72 @@ class CheckoutController extends WebController
 
     public function handleCheckout()
     {
-    //     try 
-    //   {
-    //     $order = new Order();
-    //     $orderDetail = new OrderDetail();
+        //dd($_POST);
+        //dd(Auth::getUser('user')[0]['id']);
+        try 
+        {
+            $order = new Order();
+            $_POST['user_id'] = Auth::getUser('user')[0]['id'];
+            $_POST['finalPrice'] = $_POST['total'];
+            $date = new DateTime("now", new DateTimeZone('Asia/Ho_Chi_Minh') );
+            $_POST['date_created'] = $date->format('Y-m-d H:i:s');
+            $_POST['status'] = 1;
 
-    //     $product = new Product();
+            //debug dữ liệu
+            // $cart = $_GET['cart'];
+            // $detail = array();
+            //     for ( $i = 0 ; $i < count($cart); $i ++)
+            //     {
+            //         $detail[$i] = array('product_id'=>$cart[$i]['id'], 'quantity'=>$cart[$i]['num'], 'order_id'=>1);
+            //     }
+            //     dd($detail);
+            
+            //dd($_POST);
+            //end
 
-    //     $date = new DateTime("now", new DateTimeZone('Asia/Ho_Chi_Minh') );
-    //     $_POST['date_created'] = $date->format('Y-m-d H:i:s');
-        
-    //     if( $order->create($_POST) )
-    //     { 
-    //       $id = $order->getId($_POST);
-    //       $order_id = $id['id'];
+            if( $order->create($_POST) )
+            { 
+                $id = $order->getId($_POST);
+                $order_id = $id['id'];
+                
+                $cart = $_GET['cart'];
 
-    //       $detail = array();
-    //       for ( $i = 0 ; $i < count($_POST['orderDetail']['product']['product_id']); $i ++)
-    //       {
-    //         $detail[$i] = array('product_id'=>$_POST['orderDetail']['product']['product_id'][$i], 'quantity'=>$_POST['orderDetail']['product']['quantity'][$i], 'order_id'=>$order_id);
-    //       }
+                $detail = array();
+                for ( $i = 0 ; $i < count($cart); $i ++)
+                {
+                    $detail[$i] = array('product_id'=>$cart[$i]['id'], 'quantity'=>$cart[$i]['num'], 'order_id'=>$order_id);
+                }
+                //dd($detail);
+                $orderDetail = new OrderDetail();
 
-    //       foreach($detail as $item)
-    //       {
-    //         if ($orderDetail->create($item))
-    //         {
-    //           $product = $product->find($item['product_id']);
-    //           $_POST['finalPrice'] += $item['quantity'] * ($product['base_price'] + $product['tax']);
-    //         }
-    //       }
+                foreach($detail as $item)
+                {
+                    $orderDetail->create($item);
+                    // if ($orderDetail->create($item))
+                    // {
+                    //$product = $product->find($item['product_id']);
+                    //$_POST['finalPrice'] += $item['quantity'] * ($product['base_price'] + $product['tax']);
+                    //}
+                }
+                Flash::set('web-success', 'Thanh toán đơn hàng thành công!');
 
-
-    //       Flash::set('success', 'Tạo đơn hàng thành công!');
-    //     }
-    //     else 
-    //     {
-    //       throw new Exception('Tạo đơn hàng không thành công!');
-    //     }
-    //   }
-    //   catch (Exception $e)
-    //   {
-    //     Flash::set('error', $e->getMessage());
-    //   }
-    //   finally
-    //   {
-    //     return redirect('admin/order/create' );
-    //   }
+                setcookie("cart", "", time()-3600*25, "/");
+            }
+            else 
+            {
+                throw new Exception('Tạo đơn hàng không thành công!');
+            }
+        }
+        catch (Exception $e)
+        {
+            Flash::set('error', $e->getMessage());
+        }
+        finally
+        {
+            //dd($_COOKIE['cart']);
+            return redirect('checkout/index' );
+        }
     }
+    
 }
 ?>

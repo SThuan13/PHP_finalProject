@@ -39,8 +39,6 @@ class AuthController extends BackendController
 
   public function handleLogin()
   {
-    // print_r($_POST);
-    // die();
     $authRequest = new AuthRequest();
     $errors = $authRequest->validateLogin($_POST);
     if( count($errors) == 0 )

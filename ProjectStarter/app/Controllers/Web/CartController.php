@@ -67,7 +67,7 @@ class CartController extends WebController
       ];
     }
     //dd(json_encode($cart));
-    setcookie('cart', json_encode($cart), time ()+30*24*60*60, "/");
+    setcookie('cart', json_encode($cart), time ()+3600*24, "/");
   }
 
   public function decreaseQuantity()
