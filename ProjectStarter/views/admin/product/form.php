@@ -23,7 +23,7 @@
         </div>
 
         <form 
-          action="<?php if(isset($product)) {echo url('admin/product/handleupdate');}  else{echo url('admin/product/handlecreate');}  ?>"  
+          action="<?php if(isset($product)) {echo url('admin/product/handleUpdate');}  else{echo url('admin/product/handleCreate');}  ?>"  
           method="post"
           enctype="multipart/form-data"
         >
@@ -72,9 +72,9 @@
           <div class="col-md-6">
             <div class="input-group input-group-static my-3">
               <label class="">Nước sản xuất</label>
-              <input type="text" name="manufacturer_country" class="form-control"  
+              <input type="text" name="manufacturerCountry" class="form-control"  
               <?php if(isset($product)) {?> 
-                value="<?php if(isset($product['manufacturer_country'])){echo $product['manufacturer_country'];} else {echo '';}?>" 
+                value="<?php if(isset($product)){echo $product['manufacturerCountry'];} else {echo '';}?>" 
               <?php }?>>
             </div>
           </div>

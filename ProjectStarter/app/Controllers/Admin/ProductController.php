@@ -9,6 +9,7 @@ require_once('core/Flash.php');
 require_once('core/Storage.php');
 require_once('core/Auth.php');
 
+
 class ProductController extends BackendController
 {
   protected $page = 1, $take = 10, $offSet;
@@ -93,6 +94,7 @@ class ProductController extends BackendController
       //$product->create($_POST);
       //dd($product->create($_POST));
       //dd($_POST);
+      //echo($_POST);
       try 
       {
         $this->handleUploadImages();
@@ -136,6 +138,8 @@ class ProductController extends BackendController
     }
 
     $_POST['img'] = json_encode($image);
+    
+    //dd($_POST);
   }
 
   public function handleUpdateImages()
@@ -150,13 +154,12 @@ class ProductController extends BackendController
     }
   }
 
-  public function handleUpldate()
+  public function handleUpdate()
   {
-    dd(1);
-    $request = new productRequest();
-    $errors = $request->validateCreateUpdate($_POST);
-    if( $errors )
-    {
+    // $request = new productRequest();
+    // $errors = $request->validateCreateUpdate($_POST);
+    // if( $errors )
+    // {
       try 
       {
         $this->handleUpdateImages();
@@ -177,11 +180,11 @@ class ProductController extends BackendController
       {
         return redirect('admin/product/detail', ['id'=>$_POST['id']]);
       }
-    }
-    else 
-    {
-      return redirect('admin/product/detail', ['id'=>$_POST['id']]);
-    }
+    //}
+    // else 
+    // {
+    //   return redirect('admin/product/detail', ['id'=>$_POST['id']]);
+    // }
   }
 
   public function handleDelete()

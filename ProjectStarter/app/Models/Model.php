@@ -82,7 +82,6 @@ class Model
             $fields = implode(',', $keys);
             $values = implode(',', $values);
             $sql = "INSERT INTO {$this->table}({$fields}) VALUES ($values)";
-            dd($sql);
             $res = $this->dbConnection->query($sql);
             if ($res) {
                 $pk = $this->primaryKey;

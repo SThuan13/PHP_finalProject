@@ -22,9 +22,11 @@
         $flag = 1;
       }
       else {
-        if ($data['basePrice'] < 0)
-        Flash::set('basePrice-error', 'Giá gốc không được âm!');
-        $flag = 1;
+        if ($data['basePrice'] < 0){
+          Flash::set('basePrice-error', 'Giá gốc không được âm!');
+          $flag = 1;
+        }
+        
       }
 
       if ( empty($data['tax']) )
@@ -34,8 +36,11 @@
       }
       else {
         if ($data['tax'] < 0)
-        Flash::set('tax-error', 'Thuế không được âm!');
-        $flag = 1;
+        { 
+          Flash::set('tax-error', 'Thuế không được âm!');
+          $flag = 1;
+        }
+        
       }
 
       if ($flag == 1)

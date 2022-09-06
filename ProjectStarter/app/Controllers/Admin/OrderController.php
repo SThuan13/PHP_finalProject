@@ -125,10 +125,13 @@ class OrderController extends BackendController
             if ($orderDetail->create($item))
             {
               $product = $product->find($item['product_id']);
-              $_POST['finalPrice'] += $item['quantity'] * ($product['base_price'] + $product['tax']);
+              //dd($product);
+              $_POST['finalPrice'] += $item['quantity'] * ($product['basePrice'] + $product['tax']);
             }
           }
 
+          dd($_POST);
+          $order->update($_POST, $order_id );
 
           Flash::set('success', 'Tạo đơn hàng thành công!');
         }
@@ -169,7 +172,10 @@ class OrderController extends BackendController
         if ( $order->update($_POST, $_POST['id']) )
         { 
           $this->handleUpdateProductList();
-          Flash::set('success', 'Chỉnh sửa đơn hàng thành công!');
+          // if ($order->update($_POST, $_POST['id'])){
+            Flash::set('success', 'Chỉnh sửa đơn hàng thành công!');
+          // }
+          // dd($_POST);
         }
         else {  
           throw new Exception('Chỉnh sửa đơn hàng không thành công!');
@@ -192,6 +198,8 @@ class OrderController extends BackendController
 
   public function handleUpdateProductList()
   {
+    $product = new Product();
+
     $id = $_POST['id'];
     $orderDetails = new OrderDetail();
     $orderDetail = new OrderDetail();
@@ -213,10 +221,20 @@ class OrderController extends BackendController
         {
           $orderDetail->update($item, $item['id']);
         }
+
+        // $product = $product->find($item['product_id']);
+        // //dd($product);
+        // $_POST['finalPrice'] += $item['quantity'] * ($product['basePrice'] + $product['tax']);
       }
       else 
       {
         $orderDetail->create($item);
+        // if ($orderDetail->create($item))
+        // {
+        //   $product = $product->find($item['product_id']);
+        //   //dd($product);
+        //   $_POST['finalPrice'] += $item['quantity'] * ($product['basePrice'] + $product['tax']);
+        // }
       }
     }
   }
