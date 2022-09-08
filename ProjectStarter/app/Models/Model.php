@@ -16,6 +16,7 @@ class Model
     public function __construct()
     {
         $this->dbConnection = DatabaseConnection::getInstance();
+        $this->dbConnection->set_charset('utf8');
         $this->checkRequiredProperties();
     }
 

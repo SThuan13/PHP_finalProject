@@ -23,7 +23,7 @@
 					<ul >
 							<?php foreach($categories as $category) { ?>
 									<li>
-										<a href="#"><?php echo $category['name']?></a>
+										<a href="<?php echo url('category/index', ['id'=>$category['id']])?>"><?php echo $category['name']?></a>
 									</li>
 							<?php } ?>
 					</ul>

@@ -3,7 +3,7 @@
 <?php require_once('views/web/layouts/index.php') ?>
 
 <?php startblock('title') ?>
-
+    Đăng ký thành công
 <?php endblock() ?>
 
 <?php startblock('content') ?>

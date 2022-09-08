@@ -10,7 +10,8 @@ class HomepageController extends WebController
     public function index()
     {
         $products = new Product();
-        $products = $products->findAll();
+        $sql = "SELECT * FROM products LIMIT 8";
+        $products = $products->getAll($sql);
 
         $categories = new Category();
         $categories = $categories->findAll();

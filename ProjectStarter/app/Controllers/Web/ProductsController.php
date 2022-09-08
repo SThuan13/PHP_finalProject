@@ -1,6 +1,6 @@
 <?php
 
-require_once('app/Controllers/Web/Webcontroller.php');
+require_once('app/Controllers/Web/WebController.php');
 require_once('app/Models/Product.php');
 require_once('app/Models/Category.php');
 

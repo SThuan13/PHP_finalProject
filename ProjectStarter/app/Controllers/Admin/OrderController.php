@@ -51,9 +51,10 @@ class OrderController extends BackendController
 
     $orders = new Order();
 
-    $sql = "SELECT orders.id, note, status, user_details.name as name, date_created from orders, user_details 
-            where user_details.user_id = orders.user_id 
+    $sql = "SELECT orders.id, note, status, users.account_name as name, date_created from orders, users 
+            where users.id = orders.user_id 
             LIMIT $this->take OFFSET $this->offSet";
+    //dd($sql);
     $orders =  $orders->getAll($sql);
 
     return $this->view('order/list.php', compact('orders','page','take'));
@@ -113,6 +114,7 @@ class OrderController extends BackendController
         { 
           $id = $order->getId($_POST);
           $order_id = $id['id'];
+          $_POST['finalPrice'] = 0;
 
           $detail = array();
           for ( $i = 0 ; $i < count($_POST['orderDetail']['product']['product_id']); $i ++)
@@ -130,7 +132,7 @@ class OrderController extends BackendController
             }
           }
 
-          dd($_POST);
+          //dd($_POST);
           $order->update($_POST, $order_id );
 
           Flash::set('success', 'Tạo đơn hàng thành công!');
@@ -172,8 +174,9 @@ class OrderController extends BackendController
         if ( $order->update($_POST, $_POST['id']) )
         { 
           $this->handleUpdateProductList();
+          $order->update($_POST, $_POST['id']);
           // if ($order->update($_POST, $_POST['id'])){
-            Flash::set('success', 'Chỉnh sửa đơn hàng thành công!');
+          Flash::set('success', 'Chỉnh sửa đơn hàng thành công!');
           // }
           // dd($_POST);
         }
@@ -198,8 +201,6 @@ class OrderController extends BackendController
 
   public function handleUpdateProductList()
   {
-    $product = new Product();
-
     $id = $_POST['id'];
     $orderDetails = new OrderDetail();
     $orderDetail = new OrderDetail();
@@ -212,8 +213,15 @@ class OrderController extends BackendController
       $detail[$i] = array('id'=>$_POST['orderDetail']['product']['id'][$i] ,'product_id'=>$_POST['orderDetail']['product']['product_id'][$i], 'quantity'=>$_POST['orderDetail']['product']['quantity'][$i], 'order_id'=>$id);
     }
 
+    $finalPrice = 0;
+
     foreach( $detail as $item)
     {
+      $itemId = $item['product_id'];
+      
+      $product = new Product();
+      $product = $product->find($itemId);
+      
       if ($item['id'] != 0)
       {
         //so sánh 
@@ -221,22 +229,29 @@ class OrderController extends BackendController
         {
           $orderDetail->update($item, $item['id']);
         }
-
-        // $product = $product->find($item['product_id']);
-        // //dd($product);
-        // $_POST['finalPrice'] += $item['quantity'] * ($product['basePrice'] + $product['tax']);
       }
       else 
       {
         $orderDetail->create($item);
-        // if ($orderDetail->create($item))
-        // {
-        //   $product = $product->find($item['product_id']);
-        //   //dd($product);
-        //   $_POST['finalPrice'] += $item['quantity'] * ($product['basePrice'] + $product['tax']);
-        // }
       }
+      $finalPrice += $item['quantity'] * ($product['basePrice'] + $product['tax']);
     }
+    //dd($finalPrice);   
+    //dd($_POST);
+    //dd($detail);
+    $_POST['finalPrice'] = $finalPrice;
+    // echo "<pre>";
+    // echo "Old";
+    //   echo "<br>";
+    // print_r($orderDetails);
+    // echo "New";
+    //   echo "<br>";
+    // print_r($detail);
+
+    $this->deleteRecord($orderDetails,$detail);
+    //die();
+
+    //dd($_POST);
   }
 
   //hàm xét xem 1 bản ghi có giống hết với bản ghi ở trong csdl không; có return false; không return true
@@ -248,12 +263,89 @@ class OrderController extends BackendController
       {
         return false;
       }
-      else 
+    }
+    return true; 
+  }
+
+  public function deleteRecord($firstArr, $secondArr)
+  {
+
+    //dd($_POST);
+    $orderDetails = new OrderDetail();
+    foreach($firstArr as $baseDetail)
+    {
+      //echo "------>";
+      //print_r($baseDetail);
+      //echo "------";
+      $flag = 0;
+      // if($this->exactRecord($secondArr,$baseDetail))
+      // {
+      //   $flag = 1;
+      // }
+      
+      foreach($secondArr as $detail)
       {
-        return true; 
+        print_r($detail);
+        // if($detail == $baseDetail)
+        // {
+        //   $flag = 1;
+        //   break;
+        // }
+        
+        if($this->isEqualRecord($baseDetail, $detail))
+        {
+          $flag = 1;
+          break;
+        }
       }
+      //echo $flag;
+      // die();
+      if ($flag == 0)
+      {
+        //echo "delete";
+        //print_r($baseDetail);
+        $orderDetails->delete($baseDetail['id']);
+      }
+      //echo "------>";
+      //echo "<br>";
     }
   }
-  
+
+  public function isEqualRecord($record1 , $record2)
+  {
+    $r1 = implode(" ",$record1);
+    //$a11 = str_replace(' ',' ',$a1);
+    $r11 = "";
+    for( $i = 0 ; $i < strlen($r1) ; $i++)
+    {
+      if ($r1[$i] != " ")
+      {
+        echo $r1[$i];
+        $r11 .= $r1[$i];
+      }
+    }
+    //echo '<br>';
+
+    $r2 = implode(" ",$record2);
+
+    //$a12 = str_replace(' ',' ',$a2);
+    $r12 = "";
+    for( $i = 0 ; $i < strlen($r2) ; $i++)
+    {
+      if ($r2[$i] != " ")
+      {
+        //echo $r2[$i];
+        $r12 .= $r2[$i];
+      }
+    }
+    //echo '<br>';
+    //echo $r11.' '.$r12.'<br>';
+    //echo strcasecmp($r11, $r12)."<br>";
+    if (strcasecmp($r11, $r12) == 0)
+    {
+      return true;
+    }
+    return false;
+  }
 }
 ?>

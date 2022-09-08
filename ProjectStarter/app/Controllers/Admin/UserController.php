@@ -4,7 +4,7 @@ require_once('app/Controllers/Admin/BackendController.php');
 require_once('app/Requests/Admin/UserRequest.php');
 require_once('app/Models/User.php');
 require_once('app/Models/UserDetail.php');
-require_once('app/Models/role.php');
+require_once('app/Models/Role.php');
 require_once('core/Flash.php');
 // require_once('core/Auth.php');
 

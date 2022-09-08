@@ -1,5 +1,7 @@
 <?php include_once('views/web/layouts/index.php') ?>
-
+<?php startblock('title') ?>
+  Danh sách sản phẩm
+<?php endblock() ?>
 <?php startblock('content') ?>
 
 
@@ -10,10 +12,10 @@
     <div class="container">
         <h1>Sản phẩm</h1>
         <div class="col-md-9">
-            <div class="content-top1">
+            <div class="content-top1 ">
                 <?php foreach($products as $product) {?>
                     <div class="col-md-4 " style="margin: 5px 0px;">
-                        <div class="col-md1 simpleCart_shelfItem">
+                        <div class="col-md1 simpleCart_shelfItem " style="width: 263px; height: 336px;">
                         <a href="<?php echo url('products/detail', ['id'=>$product['id']])?>">
                             <?php $img = json_decode($product['img'])?>
                             <img class="img-responsive" 

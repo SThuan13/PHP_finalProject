@@ -1,5 +1,9 @@
 <?php require_once('views/web/layouts/index.php') ?>
 
+<?php startblock('title') ?>
+  Đăng ký
+<?php endblock() ?>
+
 <?php startblock('content') ?>
 <?php require_once('views/web/layouts/includes/header.php') ?>
 <div class="container">
@@ -29,17 +33,17 @@
             </div>
             <div class=" col-md-6 register-bottom-grid">
 
-                <div class="mation">
+                <div class="input-group" style="padding: 16px 0px;">
                     <span>Mật khẩu</span>
-                    <input name="password" type="text">
+                    <input name="password" style="padding: 8px; margin: 8px 0px; height: 40.85px; width: 100%;" class="form-control" type="password">
                     <?php if (isset($errors['password'])) { ?>
                         <div class="invalid-feedback" style="display: block; color:red">
                             <?php echo $errors['password'] ?>
                         </div>
                     <?php } ?>
-
+                
                     <span>Nhập lại mật khẩu</span>
-                    <input name="confirmPassword" type="text">
+                    <input name="confirmPassword" style="padding: 8px; margin: 8px 0px; height: 40.85px; width: 100%;" class="form-control" type="password">
                     <?php if (isset($errors['confirmPassword'])) { ?>
                         <div class="invalid-feedback" style="display: block; color:red">
                             <?php echo $errors['confirmPassword'] ?>

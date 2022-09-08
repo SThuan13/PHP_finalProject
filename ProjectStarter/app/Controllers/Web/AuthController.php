@@ -1,7 +1,8 @@
 <?php
-require_once('app/Controllers/web/WebController.php');
+require_once('app/Controllers/Web/WebController.php');
 require_once('app/Models/User.php');
 require_once('core/Flash.php');
+require_once('app/Models/Category.php');
 require_once('core/Auth.php');
 require_once('app/Requests/Web/AuthRequest.php');
 
@@ -10,11 +11,20 @@ class AuthController extends WebController
 {
     public function login()
     {
-        return $this->view('auth/login.php');
+
+      
+      $categories = new Category();
+      $categories = $categories->findAll();
+
+        return $this->view('auth/login.php', compact('categories'));
     }
 
     public function handleLogin()
     {
+
+      $categories = new Category();
+      $categories = $categories->findAll();
+
       $authRequest = new AuthRequest();
       $errors = $authRequest->validateLogin($_POST);
       
@@ -40,6 +50,9 @@ class AuthController extends WebController
 
     public function handleRegister()
     {
+      
+      $categories = new Category();
+      $categories = $categories->findAll();
       // dd($_POST);
       $authRequest = new AuthRequest();
       $errors = $authRequest->validateRegister($_POST);
@@ -59,7 +72,7 @@ class AuthController extends WebController
           // echo 1;
           Flash::set('success', 'Đăng ký thành công!');
 
-          return $this->view('auth/success.php');
+          return $this->view('auth/success.php', compact('categories'));
         }
         else
         {
@@ -82,14 +95,17 @@ class AuthController extends WebController
         //echo 'That bai';
       }
       else {
-        return $this->view('auth/register.php', compact('errors'));
+        return $this->view('auth/register.php', compact('categories','errors'));
       }
       //return $this->view('auth/login.php', compact('errors'));
     }
 
     public function register()
     {
-        return $this->view('auth/register.php');
+
+      $categories = new Category();
+      $categories = $categories->findAll();
+        return $this->view('auth/register.php', compact('categories'));
     }
 
     // public function handleReset(){

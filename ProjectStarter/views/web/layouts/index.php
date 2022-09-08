@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>Fashion Mania A Ecommerce Category Flat Bootstarp Resposive Website Template | Single :: w3layouts</title>
+    <title>
+        <?php defineblock('title'); ?>
+    </title>
     <link href="<?php echo asset('assets/web/css/bootstrap.css') ?>" rel="stylesheet" type="text/css" media="all" />
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="<?php echo asset('assets/web/js/jquery.min.js') ?>"></script>

@@ -10,12 +10,18 @@ class AuthController extends BackendController
 {
   public function login()
   {
-    return $this->view('auth/login.php');
+    $categories = new Category();
+    $categories = $categories->findAll();
+
+    return $this->view('auth/login.php', compact('categories'));
   }
 
   public function register()
   {
-    return $this->view('auth/register.php');
+    $categories = new Category();
+    $categories = $categories->findAll();
+
+    return $this->view('auth/register.php', compact('categories'));
   }
 
   public function handleRegister()

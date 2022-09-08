@@ -54,9 +54,11 @@
 			<div class="col-md-2 number">
 				<span><i class="glyphicon glyphicon-phone"></i>090 444 2946</span>
 			</div>
-			<div class="col-md-8 h_menu4">
+			<div class="col-sm-8 h_menu4">
 				<ul class="memenu skyblue">
-					<li class="grid"><a href="<?php echo url('homepage/index') ?>">Home</a></li>
+					<li class="grid">
+						<a href="<?php echo url('homepage/index') ?>">Home</a>
+					</li>
 					<li>
 						<a href="<?php echo url('products/index') ?>">All Clothing</a>
 						<div class="mepanel">
